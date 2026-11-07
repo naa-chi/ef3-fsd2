@@ -1,0 +1,750 @@
+{
+  "root": "C:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2",
+  "generated_at": "2026-11-07T17:45:26",
+  "summary": {
+    "files": 42,
+    "folders": 60
+  },
+  "tree": {
+    "name": "ef3-fsd2",
+    "type": "folder",
+    "path": "ef3-fsd2",
+    "children": [
+      {
+        "name": ".git",
+        "type": "folder",
+        "path": "ef3-fsd2\\.git",
+        "skipped": true
+      },
+      {
+        "name": ".vscode",
+        "type": "folder",
+        "path": "ef3-fsd2\\.vscode",
+        "skipped": true
+      },
+      {
+        "name": "Backend",
+        "type": "folder",
+        "path": "ef3-fsd2\\Backend",
+        "children": [
+          {
+            "name": "package",
+            "type": "folder",
+            "path": "ef3-fsd2\\Backend\\package",
+            "children": [
+              {
+                "name": ".mvn",
+                "type": "folder",
+                "path": "ef3-fsd2\\Backend\\package\\.mvn",
+                "children": [
+                  {
+                    "name": "wrapper",
+                    "type": "folder",
+                    "path": "ef3-fsd2\\Backend\\package\\.mvn\\wrapper",
+                    "children": [
+                      {
+                        "name": "maven-wrapper.properties",
+                        "type": "file",
+                        "path": "ef3-fsd2\\Backend\\package\\.mvn\\wrapper\\maven-wrapper.properties",
+                        "size": 168,
+                        "content": "wrapperVersion=3.3.4\ndistributionType=only-script\ndistributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.10.0/apache-maven-3.10.0-bin.zip\n"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "src",
+                "type": "folder",
+                "path": "ef3-fsd2\\Backend\\package\\src",
+                "children": [
+                  {
+                    "name": "main",
+                    "type": "folder",
+                    "path": "ef3-fsd2\\Backend\\package\\src\\main",
+                    "children": [
+                      {
+                        "name": "java",
+                        "type": "folder",
+                        "path": "ef3-fsd2\\Backend\\package\\src\\main\\java",
+                        "children": [
+                          {
+                            "name": "com",
+                            "type": "folder",
+                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com",
+                            "children": [
+                              {
+                                "name": "example",
+                                "type": "folder",
+                                "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example",
+                                "children": [
+                                  {
+                                    "name": "demo",
+                                    "type": "folder",
+                                    "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo",
+                                    "children": [
+                                      {
+                                        "name": "config",
+                                        "type": "folder",
+                                        "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\config",
+                                        "children": [
+                                          {
+                                            "name": "OpenApiConfig.java",
+                                            "type": "file",
+                                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\config\\OpenApiConfig.java",
+                                            "size": 745,
+                                            "content": "package com.example.demo.config;\n\nimport io.swagger.v3.oas.models.OpenAPI;\nimport io.swagger.v3.oas.models.info.Info;\nimport io.swagger.v3.oas.models.info.Contact;\nimport org.springframework.context.annotation.Bean;\nimport org.springframework.context.annotation.Configuration;\n\n@Configuration\npublic class OpenApiConfig {\n\n    @Bean\n    public OpenAPI customOpenAPI() {\n        return new OpenAPI()\n                .info(new Info()\n                        .title(\"Dinobox & Package API\") //\n                        .version(\"1.0.0\")\n                        .description(\"Swagger API documentation for Products and Packages.\")\n                        .contact(new Contact().name(\"Devvin'\").email(\"test@example.com\")));\n    }\n}"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "packages",
+                                        "type": "folder",
+                                        "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages",
+                                        "children": [
+                                          {
+                                            "name": "controller",
+                                            "type": "folder",
+                                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\controller",
+                                            "children": [
+                                              {
+                                                "name": "PackageController.java",
+                                                "type": "file",
+                                                "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\controller\\PackageController.java",
+                                                "size": 2054,
+                                                "content": "package com.example.demo.packages.controller;\n\nimport org.springframework.http.HttpStatus;\nimport org.springframework.http.ResponseEntity;\nimport org.springframework.web.bind.annotation.*;\n\nimport com.example.demo.packages.model.PackageModel;\nimport com.example.demo.packages.service.PackageService;\n\nimport io.swagger.v3.oas.annotations.Operation;\nimport lombok.RequiredArgsConstructor;\n\nimport java.util.List;\n\n@RestController \n@RequestMapping(\"/api/v1/Packages\")\n@RequiredArgsConstructor \npublic class PackageController {\n    private final PackageService service;\n\n    @Operation(summary = \"Does the thing and creates a new Package\", description = \"Creates a new Package idk man its self explanatory\")\n    @PostMapping \n    public ResponseEntity<PackageModel> create(@RequestBody PackageModel Package) {\n        PackageModel savedPackage = service.createPackage(Package);\n        return new ResponseEntity<>(savedPackage, HttpStatus.CREATED);\n    }\n\n    @Operation(summary = \"Gets all the thingies\", description = \"Self explanatory\")\n    @GetMapping\n    public ResponseEntity<List<PackageModel>> getAll() {\n        return ResponseEntity.ok(service.getAllPackages());\n    }\n\n    @Operation(summary = \"Gets a thing per id\", description = \"Self explanatory\")\n    @GetMapping(\"/{id}\")\n    public ResponseEntity<PackageModel> getById(@PathVariable Long id) {\n        return ResponseEntity.ok(service.getPackageById(id));\n    }\n\n    @Operation(summary = \"Updates all the thingies\", description = \"Self explanatory\")\n    @PutMapping(\"/{id}\")\n    public ResponseEntity<PackageModel> update(@PathVariable Long id, @RequestBody PackageModel Package) {\n        return ResponseEntity.ok(service.updatePackage(id, Package));\n    }\n\n    @Operation(summary = \"Eviscerates one entry by its id\", description = \"Self explanatory\")\n    @DeleteMapping(\"/{id}\")\n    public ResponseEntity<Void> delete(@PathVariable Long id) {\n        service.deletePackage(id);\n        return ResponseEntity.noContent().build();\n    }\n}\n"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "name": "model",
+                                            "type": "folder",
+                                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\model",
+                                            "children": [
+                                              {
+                                                "name": "CurrentState.java",
+                                                "type": "file",
+                                                "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\model\\CurrentState.java",
+                                                "size": 130,
+                                                "content": "package com.example.demo.packages.model;\n\npublic enum CurrentState {\n    PENDING, EN_ROUTE, ARRIVED, LOST, WE_HAVE_NO_IDEA\n}\n"
+                                              },
+                                              {
+                                                "name": "PackageModel.java",
+                                                "type": "file",
+                                                "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\model\\PackageModel.java",
+                                                "size": 715,
+                                                "content": "package com.example.demo.packages.model;\n\nimport java.time.LocalDate;\nimport jakarta.persistence.*;\nimport lombok.*;\n\n@AllArgsConstructor\n@NoArgsConstructor\n@Getter\n@Setter\n@Entity\n@Table(name = \"PackageModel\", schema = \"DinoRawrX3\") \npublic class PackageModel {\n    @Id \n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id; \n\n    @Column(unique = true, nullable = false)\n    private String orderId;\n\n    @Column(unique = false, nullable = false)\n    private LocalDate issueDate;\n\n    @Enumerated(EnumType.STRING)\n    @Column(nullable = false)\n    private CurrentState currentState; \n\n    @Column(unique = false, nullable = false) \n    private String location;\n}"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "name": "repository",
+                                            "type": "folder",
+                                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\repository",
+                                            "children": [
+                                              {
+                                                "name": "PackageRepository.java",
+                                                "type": "file",
+                                                "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\repository\\PackageRepository.java",
+                                                "size": 340,
+                                                "content": "package com.example.demo.packages.repository;\n\nimport org.springframework.data.jpa.repository.JpaRepository;\n\nimport com.example.demo.packages.model.PackageModel;\nimport java.util.Optional;\n\npublic interface PackageRepository extends JpaRepository<PackageModel, Long> {\n    Optional<PackageModel> findByOrderId(String orderId);\n}\n"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "name": "service",
+                                            "type": "folder",
+                                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\service",
+                                            "children": [
+                                              {
+                                                "name": "PackageService.java",
+                                                "type": "file",
+                                                "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\service\\PackageService.java",
+                                                "size": 2125,
+                                                "content": "package com.example.demo.packages.service;\n\nimport org.springframework.stereotype.Service;\nimport org.springframework.transaction.annotation.Transactional;\nimport com.example.demo.packages.model.PackageModel;\nimport com.example.demo.packages.repository.PackageRepository;\nimport lombok.RequiredArgsConstructor;\n\nimport java.time.LocalDate;\nimport java.util.List;\nimport java.util.UUID;\n\n@Service\n@RequiredArgsConstructor \n@Transactional \npublic class PackageService {\n    private final PackageRepository repo;\n\n    public PackageModel createPackage(PackageModel packageDetails) {\n        String trackingCode = UUID.randomUUID().toString().substring(0, 8).toUpperCase();\n        packageDetails.setOrderId(trackingCode);\n        packageDetails.setIssueDate(LocalDate.now());\n                \n        return repo.save(packageDetails);\n    }\n\n    @Transactional(readOnly = true)\n    public List<PackageModel> getAllPackages() {\n        return repo.findAll();\n    }\n\n    @Transactional(readOnly = true)\n    public PackageModel getPackageById(Long id) {\n        return repo.findById(id)\n                .orElseThrow(() -> new RuntimeException(\"Package not found with id: \" + id));\n    }\n\n    @Transactional(readOnly = true)\n    public PackageModel getPackageByOrderId(String orderId) {\n        return repo.findByOrderId(orderId)\n                .orElseThrow(() -> new RuntimeException(\"Package not found with code: \" + orderId));\n    }\n\n    public PackageModel updatePackage(Long id, PackageModel packageDetails) {\n        PackageModel existingPackage = repo.findById(id)\n                .orElseThrow(() -> new RuntimeException(\"Package not found with id: \" + id));\n        existingPackage.setCurrentState(packageDetails.getCurrentState());\n        existingPackage.setLocation(packageDetails.getLocation());\n\n        return repo.save(existingPackage);\n    }\n\n    public void deletePackage(Long id) {\n        if (!repo.existsById(id)) {\n            throw new RuntimeException(\"Cannot delete. Package not found with id: \" + id);\n        }\n        repo.deleteById(id);\n    }\n}"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "products",
+                                        "type": "folder",
+                                        "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products",
+                                        "children": [
+                                          {
+                                            "name": "controller",
+                                            "type": "folder",
+                                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\controller",
+                                            "children": [
+                                              {
+                                                "name": "ProductController.java",
+                                                "type": "file",
+                                                "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\controller\\ProductController.java",
+                                                "size": 2052,
+                                                "content": "package com.example.demo.products.controller;\n\nimport org.springframework.http.HttpStatus;\nimport org.springframework.http.ResponseEntity;\nimport org.springframework.web.bind.annotation.*;\n\nimport com.example.demo.products.model.ProductModel;\nimport com.example.demo.products.service.ProductService;\n\nimport io.swagger.v3.oas.annotations.Operation;\nimport lombok.RequiredArgsConstructor;\n\nimport java.util.List;\n\n@RestController \n@RequestMapping(\"/api/v1/products\")\n@RequiredArgsConstructor \npublic class ProductController {\n    private final ProductService service;\n\n    @Operation(summary = \"Does the thing and creates a new product\", description = \"Creates a new product idk man its self explanatory\")\n    @PostMapping \n    public ResponseEntity<ProductModel> create(@RequestBody ProductModel product) {\n        ProductModel savedProduct = service.createProduct(product);\n        return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);\n    }\n\n    @Operation(summary = \"Gets all the thingies\", description = \"Self explanatory\")\n    @GetMapping\n    public ResponseEntity<List<ProductModel>> getAll() {\n        return ResponseEntity.ok(service.getAllProducts());\n    }\n\n    @Operation(summary = \"Gets a thing per id\", description = \"Self explanatory\")\n    @GetMapping(\"/{id}\")\n    public ResponseEntity<ProductModel> getById(@PathVariable Long id) {\n        return ResponseEntity.ok(service.getProductById(id));\n    }\n\n    @Operation(summary = \"Updates all the thingies\", description = \"Self explanatory\")\n    @PutMapping(\"/{id}\")\n    public ResponseEntity<ProductModel> update(@PathVariable Long id, @RequestBody ProductModel product) {\n        return ResponseEntity.ok(service.updateProduct(id, product));\n    }\n\n    @Operation(summary = \"Eviscerates one entry by its id\", description = \"Self explanatory\")\n    @DeleteMapping(\"/{id}\")\n    public ResponseEntity<Void> delete(@PathVariable Long id) {\n        service.deleteProduct(id);\n        return ResponseEntity.noContent().build();\n    }\n}"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "name": "model",
+                                            "type": "folder",
+                                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\model",
+                                            "children": [
+                                              {
+                                                "name": "ProductModel.java",
+                                                "type": "file",
+                                                "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\model\\ProductModel.java",
+                                                "size": 1081,
+                                                "content": "package com.example.demo.products.model;\n\nimport java.time.LocalDate;\n\nimport jakarta.persistence.*;\nimport jakarta.validation.constraints.*;\nimport lombok.*;\n\n@AllArgsConstructor\n@NoArgsConstructor\n@Getter // shitass noargs and allargs was breaking thoroughly wtf man\n@Setter\n@Entity\n@Table(name = \"ProductModel\", schema = \"DinoRawrsX3\")\npublic class ProductModel {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long Id;\n\n    @Column(unique = false, nullable = false)\n    private String productName;\n\n    @Column(unique = false, nullable = false)\n    @Min(value=0)\n    @Max(value=999999)\n    private Integer productPrice;\n\n    @Column(unique = false, nullable = false)\n    @Min(value=0)\n    @Max(value=999999)\n    private Integer productStock;\n\n    @Column(unique = false, nullable = false)\n    private String manufacturer;\n\n    @Column(unique = false, nullable = false)\n    private LocalDate manufacturingDate;\n\n    @Enumerated(EnumType.STRING)\n    @Column(nullable = false)\n    private ProductType type;\n}\n"
+                                              },
+                                              {
+                                                "name": "ProductType.java",
+                                                "type": "file",
+                                                "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\model\\ProductType.java",
+                                                "size": 157,
+                                                "content": "package com.example.demo.products.model;\n\npublic enum ProductType {\n    FOOD, APPLIANCES, LIQUIDS, ALCOHOLIC_BEVERAGES, BEVERAGES, ELECTRONICS, OTHER\n}\n"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "name": "repository",
+                                            "type": "folder",
+                                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\repository",
+                                            "children": [
+                                              {
+                                                "name": "ProductRepository.java",
+                                                "type": "file",
+                                                "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\repository\\ProductRepository.java",
+                                                "size": 253,
+                                                "content": "package com.example.demo.products.repository;\n\nimport org.springframework.data.jpa.repository.JpaRepository;\nimport com.example.demo.products.model.ProductModel;\n\npublic interface ProductRepository extends JpaRepository<ProductModel, Long> {\n\n}\n"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "name": "service",
+                                            "type": "folder",
+                                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\service",
+                                            "children": [
+                                              {
+                                                "name": "ProductService.java",
+                                                "type": "file",
+                                                "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\service\\ProductService.java",
+                                                "size": 1898,
+                                                "content": "package com.example.demo.products.service;\n\nimport org.springframework.stereotype.Service;\nimport org.springframework.transaction.annotation.Transactional;\n\nimport com.example.demo.products.model.ProductModel;\nimport com.example.demo.products.repository.ProductRepository;\n\nimport lombok.RequiredArgsConstructor;\n\nimport java.util.List;\n\n@Service \n@RequiredArgsConstructor \n@Transactional \npublic class ProductService {\n    private final ProductRepository repo;\n\n    @Transactional(readOnly = true)\n    public List<ProductModel> getAllProducts() {\n        return repo.findAll();\n    }\n\n    @Transactional(readOnly = true)\n    public ProductModel getProductById(Long id) {\n        return repo.findById(id)\n                .orElseThrow(() -> new RuntimeException(\"Product not found with id: \" + id));\n    }\n\n    public ProductModel createProduct(ProductModel product) {\n        return repo.save(product);\n    }\n\n    public ProductModel updateProduct(Long id, ProductModel productDetails) {\n        ProductModel existingProduct = repo.findById(id)\n                .orElseThrow(() -> new RuntimeException(\"Product not found with id: \" + id));\n        existingProduct.setProductName(productDetails.getProductName());\n        existingProduct.setProductPrice(productDetails.getProductPrice());\n        existingProduct.setProductStock(productDetails.getProductStock());\n        existingProduct.setManufacturer(productDetails.getManufacturer());\n        existingProduct.setManufacturingDate(productDetails.getManufacturingDate());\n        existingProduct.setType(productDetails.getType());\n\n        return repo.save(existingProduct);\n    }\n\n    public void deleteProduct(Long id) {\n        if (!repo.existsById(id)) {\n            throw new RuntimeException(\"Cannot delete. Product not found with id: \" + id);\n        }\n        repo.deleteById(id);\n    }\n}"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "PackageApplication.java",
+                                        "type": "file",
+                                        "path": "ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\PackageApplication.java",
+                                        "size": 311,
+                                        "content": "package com.example.demo;\n\nimport org.springframework.boot.SpringApplication;\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\n\n@SpringBootApplication\npublic class PackageApplication {\n\n\tpublic static void main(String[] args) {\n\t\tSpringApplication.run(PackageApplication.class, args);\n\t}\n\n}\n"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "name": "resources",
+                        "type": "folder",
+                        "path": "ef3-fsd2\\Backend\\package\\src\\main\\resources",
+                        "children": [
+                          {
+                            "name": "static",
+                            "type": "folder",
+                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\resources\\static",
+                            "children": []
+                          },
+                          {
+                            "name": "templates",
+                            "type": "folder",
+                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\resources\\templates",
+                            "children": []
+                          },
+                          {
+                            "name": "application.properties",
+                            "type": "file",
+                            "path": "ef3-fsd2\\Backend\\package\\src\\main\\resources\\application.properties",
+                            "size": 479,
+                            "content": "\nserver.port=3770\n\nspring.application.name=Yeah\n\nspring.datasource.url=jdbc:mysql://localhost:3306/DinoRawrX3?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC\nspring.datasource.username=root\nspring.datasource.password=\nspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver\n\nspring.jpa.hibernate.ddl-auto=update\nspring.jpa.show-sql=true\nspring.jpa.properties.hibernate.format_sql=true\nspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect\n"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "test",
+                    "type": "folder",
+                    "path": "ef3-fsd2\\Backend\\package\\src\\test",
+                    "children": [
+                      {
+                        "name": "java",
+                        "type": "folder",
+                        "path": "ef3-fsd2\\Backend\\package\\src\\test\\java",
+                        "children": [
+                          {
+                            "name": "com",
+                            "type": "folder",
+                            "path": "ef3-fsd2\\Backend\\package\\src\\test\\java\\com",
+                            "children": [
+                              {
+                                "name": "example",
+                                "type": "folder",
+                                "path": "ef3-fsd2\\Backend\\package\\src\\test\\java\\com\\example",
+                                "children": [
+                                  {
+                                    "name": "demo",
+                                    "type": "folder",
+                                    "path": "ef3-fsd2\\Backend\\package\\src\\test\\java\\com\\example\\demo",
+                                    "children": [
+                                      {
+                                        "name": "PackageApplicationTests.java",
+                                        "type": "file",
+                                        "path": "ef3-fsd2\\Backend\\package\\src\\test\\java\\com\\example\\demo\\PackageApplicationTests.java",
+                                        "size": 209,
+                                        "content": "package com.example.demo;\n\nimport org.junit.jupiter.api.Test;\nimport org.springframework.boot.test.context.SpringBootTest;\n\n@SpringBootTest\nclass PackageApplicationTests {\n\n\t@Test\n\tvoid contextLoads() {\n\t}\n\n}\n"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "target",
+                "type": "folder",
+                "path": "ef3-fsd2\\Backend\\package\\target",
+                "children": [
+                  {
+                    "name": "classes",
+                    "type": "folder",
+                    "path": "ef3-fsd2\\Backend\\package\\target\\classes",
+                    "children": [
+                      {
+                        "name": "com",
+                        "type": "folder",
+                        "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com",
+                        "children": [
+                          {
+                            "name": "example",
+                            "type": "folder",
+                            "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example",
+                            "children": [
+                              {
+                                "name": "demo",
+                                "type": "folder",
+                                "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo",
+                                "children": [
+                                  {
+                                    "name": "config",
+                                    "type": "folder",
+                                    "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\config",
+                                    "children": [
+                                      {
+                                        "name": "OpenApiConfig.class",
+                                        "type": "file",
+                                        "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\config\\OpenApiConfig.class",
+                                        "size": 1338,
+                                        "content": null,
+                                        "note": "skipped: binary content"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "packages",
+                                    "type": "folder",
+                                    "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\packages",
+                                    "children": [
+                                      {
+                                        "name": "controller",
+                                        "type": "folder",
+                                        "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\packages\\controller",
+                                        "children": [
+                                          {
+                                            "name": "PackageController.class",
+                                            "type": "file",
+                                            "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\packages\\controller\\PackageController.class",
+                                            "size": 4263,
+                                            "content": null,
+                                            "note": "skipped: binary content"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "model",
+                                        "type": "folder",
+                                        "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\packages\\model",
+                                        "children": [
+                                          {
+                                            "name": "CurrentState.class",
+                                            "type": "file",
+                                            "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\packages\\model\\CurrentState.class",
+                                            "size": 1349,
+                                            "content": null,
+                                            "note": "skipped: binary content"
+                                          },
+                                          {
+                                            "name": "PackageModel.class",
+                                            "type": "file",
+                                            "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\packages\\model\\PackageModel.class",
+                                            "size": 2736,
+                                            "content": null,
+                                            "note": "skipped: binary content"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "repository",
+                                        "type": "folder",
+                                        "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\packages\\repository",
+                                        "children": [
+                                          {
+                                            "name": "PackageRepository.class",
+                                            "type": "file",
+                                            "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\packages\\repository\\PackageRepository.class",
+                                            "size": 579,
+                                            "content": null,
+                                            "note": "skipped: binary content"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "service",
+                                        "type": "folder",
+                                        "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\packages\\service",
+                                        "children": [
+                                          {
+                                            "name": "PackageService.class",
+                                            "type": "file",
+                                            "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\packages\\service\\PackageService.class",
+                                            "size": 4949,
+                                            "content": null,
+                                            "note": "skipped: binary content"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "products",
+                                    "type": "folder",
+                                    "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\products",
+                                    "children": [
+                                      {
+                                        "name": "controller",
+                                        "type": "folder",
+                                        "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\products\\controller",
+                                        "children": [
+                                          {
+                                            "name": "ProductController.class",
+                                            "type": "file",
+                                            "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\products\\controller\\ProductController.class",
+                                            "size": 4263,
+                                            "content": null,
+                                            "note": "skipped: binary content"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "model",
+                                        "type": "folder",
+                                        "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\products\\model",
+                                        "children": [
+                                          {
+                                            "name": "ProductModel.class",
+                                            "type": "file",
+                                            "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\products\\model\\ProductModel.class",
+                                            "size": 3643,
+                                            "content": null,
+                                            "note": "skipped: binary content"
+                                          },
+                                          {
+                                            "name": "ProductType.class",
+                                            "type": "file",
+                                            "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\products\\model\\ProductType.class",
+                                            "size": 1455,
+                                            "content": null,
+                                            "note": "skipped: binary content"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "repository",
+                                        "type": "folder",
+                                        "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\products\\repository",
+                                        "children": [
+                                          {
+                                            "name": "ProductRepository.class",
+                                            "type": "file",
+                                            "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\products\\repository\\ProductRepository.class",
+                                            "size": 373,
+                                            "content": null,
+                                            "note": "skipped: binary content"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "service",
+                                        "type": "folder",
+                                        "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\products\\service",
+                                        "children": [
+                                          {
+                                            "name": "ProductService.class",
+                                            "type": "file",
+                                            "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\products\\service\\ProductService.class",
+                                            "size": 4391,
+                                            "content": null,
+                                            "note": "skipped: binary content"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "PackageApplication.class",
+                                    "type": "file",
+                                    "path": "ef3-fsd2\\Backend\\package\\target\\classes\\com\\example\\demo\\PackageApplication.class",
+                                    "size": 742,
+                                    "content": null,
+                                    "note": "skipped: binary content"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "name": "application.properties",
+                        "type": "file",
+                        "path": "ef3-fsd2\\Backend\\package\\target\\classes\\application.properties",
+                        "size": 479,
+                        "content": "\nserver.port=3770\n\nspring.application.name=Yeah\n\nspring.datasource.url=jdbc:mysql://localhost:3306/DinoRawrX3?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC\nspring.datasource.username=root\nspring.datasource.password=\nspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver\n\nspring.jpa.hibernate.ddl-auto=update\nspring.jpa.show-sql=true\nspring.jpa.properties.hibernate.format_sql=true\nspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect\n"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "generated-sources",
+                    "type": "folder",
+                    "path": "ef3-fsd2\\Backend\\package\\target\\generated-sources",
+                    "children": [
+                      {
+                        "name": "annotations",
+                        "type": "folder",
+                        "path": "ef3-fsd2\\Backend\\package\\target\\generated-sources\\annotations",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "generated-test-sources",
+                    "type": "folder",
+                    "path": "ef3-fsd2\\Backend\\package\\target\\generated-test-sources",
+                    "children": [
+                      {
+                        "name": "test-annotations",
+                        "type": "folder",
+                        "path": "ef3-fsd2\\Backend\\package\\target\\generated-test-sources\\test-annotations",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "maven-status",
+                    "type": "folder",
+                    "path": "ef3-fsd2\\Backend\\package\\target\\maven-status",
+                    "children": [
+                      {
+                        "name": "maven-compiler-plugin",
+                        "type": "folder",
+                        "path": "ef3-fsd2\\Backend\\package\\target\\maven-status\\maven-compiler-plugin",
+                        "children": [
+                          {
+                            "name": "compile",
+                            "type": "folder",
+                            "path": "ef3-fsd2\\Backend\\package\\target\\maven-status\\maven-compiler-plugin\\compile",
+                            "children": [
+                              {
+                                "name": "default-compile",
+                                "type": "folder",
+                                "path": "ef3-fsd2\\Backend\\package\\target\\maven-status\\maven-compiler-plugin\\compile\\default-compile",
+                                "children": [
+                                  {
+                                    "name": "createdFiles.lst",
+                                    "type": "file",
+                                    "path": "ef3-fsd2\\Backend\\package\\target\\maven-status\\maven-compiler-plugin\\compile\\default-compile\\createdFiles.lst",
+                                    "size": 643,
+                                    "content": "com\\example\\demo\\products\\model\\ProductType.class\ncom\\example\\demo\\packages\\repository\\PackageRepository.class\ncom\\example\\demo\\packages\\model\\CurrentState.class\ncom\\example\\demo\\packages\\model\\PackageModel.class\ncom\\example\\demo\\products\\service\\ProductService.class\ncom\\example\\demo\\products\\repository\\ProductRepository.class\ncom\\example\\demo\\PackageApplication.class\ncom\\example\\demo\\packages\\controller\\PackageController.class\ncom\\example\\demo\\products\\model\\ProductModel.class\ncom\\example\\demo\\packages\\service\\PackageService.class\ncom\\example\\demo\\products\\controller\\ProductController.class\ncom\\example\\demo\\config\\OpenApiConfig.class\n"
+                                  },
+                                  {
+                                    "name": "inputFiles.lst",
+                                    "type": "file",
+                                    "path": "ef3-fsd2\\Backend\\package\\target\\maven-status\\maven-compiler-plugin\\compile\\default-compile\\inputFiles.lst",
+                                    "size": 1471,
+                                    "content": "C:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\config\\OpenApiConfig.java\nC:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\PackageApplication.java\nC:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\controller\\PackageController.java\nC:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\model\\CurrentState.java\nC:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\model\\PackageModel.java\nC:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\repository\\PackageRepository.java\nC:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\packages\\service\\PackageService.java\nC:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\controller\\ProductController.java\nC:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\model\\ProductModel.java\nC:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\model\\ProductType.java\nC:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\repository\\ProductRepository.java\nC:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\main\\java\\com\\example\\demo\\products\\service\\ProductService.java\n"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "name": "testCompile",
+                            "type": "folder",
+                            "path": "ef3-fsd2\\Backend\\package\\target\\maven-status\\maven-compiler-plugin\\testCompile",
+                            "children": [
+                              {
+                                "name": "default-testCompile",
+                                "type": "folder",
+                                "path": "ef3-fsd2\\Backend\\package\\target\\maven-status\\maven-compiler-plugin\\testCompile\\default-testCompile",
+                                "children": [
+                                  {
+                                    "name": "createdFiles.lst",
+                                    "type": "file",
+                                    "path": "ef3-fsd2\\Backend\\package\\target\\maven-status\\maven-compiler-plugin\\testCompile\\default-testCompile\\createdFiles.lst",
+                                    "size": 47,
+                                    "content": "com\\example\\demo\\PackageApplicationTests.class\n"
+                                  },
+                                  {
+                                    "name": "inputFiles.lst",
+                                    "type": "file",
+                                    "path": "ef3-fsd2\\Backend\\package\\target\\maven-status\\maven-compiler-plugin\\testCompile\\default-testCompile\\inputFiles.lst",
+                                    "size": 116,
+                                    "content": "C:\\Users\\nachi\\Downloads\\Swag\\ef3-fsd2\\Backend\\package\\src\\test\\java\\com\\example\\demo\\PackageApplicationTests.java\n"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "test-classes",
+                    "type": "folder",
+                    "path": "ef3-fsd2\\Backend\\package\\target\\test-classes",
+                    "children": [
+                      {
+                        "name": "com",
+                        "type": "folder",
+                        "path": "ef3-fsd2\\Backend\\package\\target\\test-classes\\com",
+                        "children": [
+                          {
+                            "name": "example",
+                            "type": "folder",
+                            "path": "ef3-fsd2\\Backend\\package\\target\\test-classes\\com\\example",
+                            "children": [
+                              {
+                                "name": "demo",
+                                "type": "folder",
+                                "path": "ef3-fsd2\\Backend\\package\\target\\test-classes\\com\\example\\demo",
+                                "children": [
+                                  {
+                                    "name": "PackageApplicationTests.class",
+                                    "type": "file",
+                                    "path": "ef3-fsd2\\Backend\\package\\target\\test-classes\\com\\example\\demo\\PackageApplicationTests.class",
+                                    "size": 540,
+                                    "content": null,
+                                    "note": "skipped: binary content"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": ".gitattributes",
+                "type": "file",
+                "path": "ef3-fsd2\\Backend\\package\\.gitattributes",
+                "size": 38,
+                "content": "/mvnw text eol=lf\n*.cmd text eol=crlf\n"
+              },
+              {
+                "name": ".gitignore",
+                "type": "file",
+                "path": "ef3-fsd2\\Backend\\package\\.gitignore",
+                "size": 394,
+                "content": "HELP.md\ntarget/\n.mvn/wrapper/maven-wrapper.jar\n!**/src/main/**/target/\n!**/src/test/**/target/\n\n### STS ###\n.apt_generated\n.classpath\n.factorypath\n.project\n.settings\n.springBeans\n.sts4-cache\n\n### IntelliJ IDEA ###\n.idea\n*.iws\n*.iml\n*.ipr\n\n### NetBeans ###\n/nbproject/private/\n/nbbuild/\n/dist/\n/nbdist/\n/.nb-gradle/\nbuild/\n!**/src/main/**/build/\n!**/src/test/**/build/\n\n### VS Code ###\n.vscode/\n"
+              },
+              {
+                "name": "HELP.md",
+                "type": "file",
+                "path": "ef3-fsd2\\Backend\\package\\HELP.md",
+                "size": 2045,
+                "content": "# Read Me First\nThe following was discovered as part of building this project:\n\n* The original package name 'com.dinobox.rawr-x3.package' is invalid and this project uses 'com.example.demo' instead.\n\n# Getting Started\n\n### Reference Documentation\nFor further reference, please consider the following sections:\n\n* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)\n* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/4.1.2/maven-plugin)\n* [Create an OCI image](https://docs.spring.io/spring-boot/4.1.2/maven-plugin/build-image.html)\n* [Spring Web](https://docs.spring.io/spring-boot/4.1.2/reference/web/servlet.html)\n* [Spring HATEOAS](https://docs.spring.io/spring-boot/4.1.2/reference/web/spring-hateoas.html)\n* [Spring Data JDBC](https://docs.spring.io/spring-boot/4.1.2/reference/data/sql.html#data.sql.jdbc)\n* [SpringDoc OpenAPI](https://springdoc.org/)\n\n### Guides\nThe following guides illustrate how to use some features concretely:\n\n* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)\n* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)\n* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)\n* [Building a Hypermedia-Driven RESTful Web Service](https://spring.io/guides/gs/rest-hateoas/)\n* [Using Spring Data JDBC](https://github.com/spring-projects/spring-data-examples/tree/main/jdbc/basics)\n* [SpringDoc OpenAPI](https://github.com/springdoc/springdoc-openapi-demos/)\n* [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)\n\n### Maven Parent overrides\n\nDue to Maven's design, elements are inherited from the parent POM to the project POM.\nWhile most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the parent.\nTo prevent this, the project POM contains empty overrides for these elements.\nIf you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.\n\n"
+              },
+              {
+                "name": "mvnw",
+                "type": "file",
+                "path": "ef3-fsd2\\Backend\\package\\mvnw",
+                "size": 11790,
+                "content": "#!/bin/sh\n# ----------------------------------------------------------------------------\n# Licensed to the Apache Software Foundation (ASF) under one\n# or more contributor license agreements.  See the NOTICE file\n# distributed with this work for additional information\n# regarding copyright ownership.  The ASF licenses this file\n# to you under the Apache License, Version 2.0 (the\n# \"License\"); you may not use this file except in compliance\n# with the License.  You may obtain a copy of the License at\n#\n#    http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing,\n# software distributed under the License is distributed on an\n# \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n# KIND, either express or implied.  See the License for the\n# specific language governing permissions and limitations\n# under the License.\n# ----------------------------------------------------------------------------\n\n# ----------------------------------------------------------------------------\n# Apache Maven Wrapper startup batch script, version 3.3.4\n#\n# Optional ENV vars\n# -----------------\n#   JAVA_HOME - location of a JDK home dir, required when download maven via java source\n#   MVNW_REPOURL - repo url base for downloading maven distribution\n#   MVNW_USERNAME/MVNW_PASSWORD - user and password for downloading maven\n#   MVNW_VERBOSE - true: enable verbose log; debug: trace the mvnw script; others: silence the output\n# ----------------------------------------------------------------------------\n\nset -euf\n[ \"${MVNW_VERBOSE-}\" != debug ] || set -x\n\n# OS specific support.\nnative_path() { printf %s\\\\n \"$1\"; }\ncase \"$(uname)\" in\nCYGWIN* | MINGW*)\n  [ -z \"${JAVA_HOME-}\" ] || JAVA_HOME=\"$(cygpath --unix \"$JAVA_HOME\")\"\n  native_path() { cygpath --path --windows \"$1\"; }\n  ;;\nesac\n\n# set JAVACMD and JAVACCMD\nset_java_home() {\n  # For Cygwin and MinGW, ensure paths are in Unix format before anything is touched\n  if [ -n \"${JAVA_HOME-}\" ]; then\n    if [ -x \"$JAVA_HOME/jre/sh/java\" ]; then\n      # IBM's JDK on AIX uses strange locations for the executables\n      JAVACMD=\"$JAVA_HOME/jre/sh/java\"\n      JAVACCMD=\"$JAVA_HOME/jre/sh/javac\"\n    else\n      JAVACMD=\"$JAVA_HOME/bin/java\"\n      JAVACCMD=\"$JAVA_HOME/bin/javac\"\n\n      if [ ! -x \"$JAVACMD\" ] || [ ! -x \"$JAVACCMD\" ]; then\n        echo \"The JAVA_HOME environment variable is not defined correctly, so mvnw cannot run.\" >&2\n        echo \"JAVA_HOME is set to \\\"$JAVA_HOME\\\", but \\\"\\$JAVA_HOME/bin/java\\\" or \\\"\\$JAVA_HOME/bin/javac\\\" does not exist.\" >&2\n        return 1\n      fi\n    fi\n  else\n    JAVACMD=\"$(\n      'set' +e\n      'unset' -f command 2>/dev/null\n      'command' -v java\n    )\" || :\n    JAVACCMD=\"$(\n      'set' +e\n      'unset' -f command 2>/dev/null\n      'command' -v javac\n    )\" || :\n\n    if [ ! -x \"${JAVACMD-}\" ] || [ ! -x \"${JAVACCMD-}\" ]; then\n      echo \"The java/javac command does not exist in PATH nor is JAVA_HOME set, so mvnw cannot run.\" >&2\n      return 1\n    fi\n  fi\n}\n\n# hash string like Java String::hashCode\nhash_string() {\n  str=\"${1:-}\" h=0\n  while [ -n \"$str\" ]; do\n    char=\"${str%\"${str#?}\"}\"\n    h=$(((h * 31 + $(LC_CTYPE=C printf %d \"'$char\")) % 4294967296))\n    str=\"${str#?}\"\n  done\n  printf %x\\\\n $h\n}\n\nverbose() { :; }\n[ \"${MVNW_VERBOSE-}\" != true ] || verbose() { printf %s\\\\n \"${1-}\"; }\n\ndie() {\n  printf %s\\\\n \"$1\" >&2\n  exit 1\n}\n\ntrim() {\n  # MWRAPPER-139:\n  #   Trims trailing and leading whitespace, carriage returns, tabs, and linefeeds.\n  #   Needed for removing poorly interpreted newline sequences when running in more\n  #   exotic environments such as mingw bash on Windows.\n  printf \"%s\" \"${1}\" | tr -d '[:space:]'\n}\n\nscriptDir=\"$(dirname \"$0\")\"\nscriptName=\"$(basename \"$0\")\"\n\n# parse distributionUrl and optional distributionSha256Sum, requires .mvn/wrapper/maven-wrapper.properties\nwhile IFS=\"=\" read -r key value; do\n  case \"${key-}\" in\n  distributionUrl) distributionUrl=$(trim \"${value-}\") ;;\n  distributionSha256Sum) distributionSha256Sum=$(trim \"${value-}\") ;;\n  esac\ndone <\"$scriptDir/.mvn/wrapper/maven-wrapper.properties\"\n[ -n \"${distributionUrl-}\" ] || die \"cannot read distributionUrl property in $scriptDir/.mvn/wrapper/maven-wrapper.properties\"\n\ncase \"${distributionUrl##*/}\" in\nmaven-mvnd-*bin.*)\n  MVN_CMD=mvnd.sh _MVNW_REPO_PATTERN=/maven/mvnd/\n  case \"${PROCESSOR_ARCHITECTURE-}${PROCESSOR_ARCHITEW6432-}:$(uname -a)\" in\n  *AMD64:CYGWIN* | *AMD64:MINGW*) distributionPlatform=windows-amd64 ;;\n  :Darwin*x86_64) distributionPlatform=darwin-amd64 ;;\n  :Darwin*arm64) distributionPlatform=darwin-aarch64 ;;\n  :Linux*x86_64*) distributionPlatform=linux-amd64 ;;\n  *)\n    echo \"Cannot detect native platform for mvnd on $(uname)-$(uname -m), use pure java version\" >&2\n    distributionPlatform=linux-amd64\n    ;;\n  esac\n  distributionUrl=\"${distributionUrl%-bin.*}-$distributionPlatform.zip\"\n  ;;\nmaven-mvnd-*) MVN_CMD=mvnd.sh _MVNW_REPO_PATTERN=/maven/mvnd/ ;;\n*) MVN_CMD=\"mvn${scriptName#mvnw}\" _MVNW_REPO_PATTERN=/org/apache/maven/ ;;\nesac\n\n# apply MVNW_REPOURL and calculate MAVEN_HOME\n# maven home pattern: ~/.m2/wrapper/dists/{apache-maven-<version>,maven-mvnd-<version>-<platform>}/<hash>\n[ -z \"${MVNW_REPOURL-}\" ] || distributionUrl=\"$MVNW_REPOURL$_MVNW_REPO_PATTERN${distributionUrl#*\"$_MVNW_REPO_PATTERN\"}\"\ndistributionUrlName=\"${distributionUrl##*/}\"\ndistributionUrlNameMain=\"${distributionUrlName%.*}\"\ndistributionUrlNameMain=\"${distributionUrlNameMain%-bin}\"\nMAVEN_USER_HOME=\"${MAVEN_USER_HOME:-${HOME}/.m2}\"\nMAVEN_HOME=\"${MAVEN_USER_HOME}/wrapper/dists/${distributionUrlNameMain-}/$(hash_string \"$distributionUrl\")\"\n\nexec_maven() {\n  unset MVNW_VERBOSE MVNW_USERNAME MVNW_PASSWORD MVNW_REPOURL || :\n  exec \"$MAVEN_HOME/bin/$MVN_CMD\" \"$@\" || die \"cannot exec $MAVEN_HOME/bin/$MVN_CMD\"\n}\n\nif [ -d \"$MAVEN_HOME\" ]; then\n  verbose \"found existing MAVEN_HOME at $MAVEN_HOME\"\n  exec_maven \"$@\"\nfi\n\ncase \"${distributionUrl-}\" in\n*?-bin.zip | *?maven-mvnd-?*-?*.zip) ;;\n*) die \"distributionUrl is not valid, must match *-bin.zip or maven-mvnd-*.zip, but found '${distributionUrl-}'\" ;;\nesac\n\n# prepare tmp dir\nif TMP_DOWNLOAD_DIR=\"$(mktemp -d)\" && [ -d \"$TMP_DOWNLOAD_DIR\" ]; then\n  clean() { rm -rf -- \"$TMP_DOWNLOAD_DIR\"; }\n  trap clean HUP INT TERM EXIT\nelse\n  die \"cannot create temp dir\"\nfi\n\nmkdir -p -- \"${MAVEN_HOME%/*}\"\n\n# Download and Install Apache Maven\nverbose \"Couldn't find MAVEN_HOME, downloading and installing it ...\"\nverbose \"Downloading from: $distributionUrl\"\nverbose \"Downloading to: $TMP_DOWNLOAD_DIR/$distributionUrlName\"\n\n# select .zip or .tar.gz\nif ! command -v unzip >/dev/null; then\n  distributionUrl=\"${distributionUrl%.zip}.tar.gz\"\n  distributionUrlName=\"${distributionUrl##*/}\"\nfi\n\n# verbose opt\n__MVNW_QUIET_WGET=--quiet __MVNW_QUIET_CURL=--silent __MVNW_QUIET_UNZIP=-q __MVNW_QUIET_TAR=''\n[ \"${MVNW_VERBOSE-}\" != true ] || __MVNW_QUIET_WGET='' __MVNW_QUIET_CURL='' __MVNW_QUIET_UNZIP='' __MVNW_QUIET_TAR=v\n\n# normalize http auth\ncase \"${MVNW_PASSWORD:+has-password}\" in\n'') MVNW_USERNAME='' MVNW_PASSWORD='' ;;\nhas-password) [ -n \"${MVNW_USERNAME-}\" ] || MVNW_USERNAME='' MVNW_PASSWORD='' ;;\nesac\n\nif [ -z \"${MVNW_USERNAME-}\" ] && command -v wget >/dev/null; then\n  verbose \"Found wget ... using wget\"\n  wget ${__MVNW_QUIET_WGET:+\"$__MVNW_QUIET_WGET\"} \"$distributionUrl\" -O \"$TMP_DOWNLOAD_DIR/$distributionUrlName\" || die \"wget: Failed to fetch $distributionUrl\"\nelif [ -z \"${MVNW_USERNAME-}\" ] && command -v curl >/dev/null; then\n  verbose \"Found curl ... using curl\"\n  curl ${__MVNW_QUIET_CURL:+\"$__MVNW_QUIET_CURL\"} -f -L -o \"$TMP_DOWNLOAD_DIR/$distributionUrlName\" \"$distributionUrl\" || die \"curl: Failed to fetch $distributionUrl\"\nelif set_java_home; then\n  verbose \"Falling back to use Java to download\"\n  javaSource=\"$TMP_DOWNLOAD_DIR/Downloader.java\"\n  targetZip=\"$TMP_DOWNLOAD_DIR/$distributionUrlName\"\n  cat >\"$javaSource\" <<-END\n\tpublic class Downloader extends java.net.Authenticator\n\t{\n\t  protected java.net.PasswordAuthentication getPasswordAuthentication()\n\t  {\n\t    return new java.net.PasswordAuthentication( System.getenv( \"MVNW_USERNAME\" ), System.getenv( \"MVNW_PASSWORD\" ).toCharArray() );\n\t  }\n\t  public static void main( String[] args ) throws Exception\n\t  {\n\t    setDefault( new Downloader() );\n\t    java.nio.file.Files.copy( java.net.URI.create( args[0] ).toURL().openStream(), java.nio.file.Paths.get( args[1] ).toAbsolutePath().normalize() );\n\t  }\n\t}\n\tEND\n  # For Cygwin/MinGW, switch paths to Windows format before running javac and java\n  verbose \" - Compiling Downloader.java ...\"\n  \"$(native_path \"$JAVACCMD\")\" \"$(native_path \"$javaSource\")\" || die \"Failed to compile Downloader.java\"\n  verbose \" - Running Downloader.java ...\"\n  \"$(native_path \"$JAVACMD\")\" -cp \"$(native_path \"$TMP_DOWNLOAD_DIR\")\" Downloader \"$distributionUrl\" \"$(native_path \"$targetZip\")\"\nfi\n\n# If specified, validate the SHA-256 sum of the Maven distribution zip file\nif [ -n \"${distributionSha256Sum-}\" ]; then\n  distributionSha256Result=false\n  if [ \"$MVN_CMD\" = mvnd.sh ]; then\n    echo \"Checksum validation is not supported for maven-mvnd.\" >&2\n    echo \"Please disable validation by removing 'distributionSha256Sum' from your maven-wrapper.properties.\" >&2\n    exit 1\n  elif command -v sha256sum >/dev/null; then\n    if echo \"$distributionSha256Sum  $TMP_DOWNLOAD_DIR/$distributionUrlName\" | sha256sum -c - >/dev/null 2>&1; then\n      distributionSha256Result=true\n    fi\n  elif command -v shasum >/dev/null; then\n    if echo \"$distributionSha256Sum  $TMP_DOWNLOAD_DIR/$distributionUrlName\" | shasum -a 256 -c >/dev/null 2>&1; then\n      distributionSha256Result=true\n    fi\n  else\n    echo \"Checksum validation was requested but neither 'sha256sum' or 'shasum' are available.\" >&2\n    echo \"Please install either command, or disable validation by removing 'distributionSha256Sum' from your maven-wrapper.properties.\" >&2\n    exit 1\n  fi\n  if [ $distributionSha256Result = false ]; then\n    echo \"Error: Failed to validate Maven distribution SHA-256, your Maven distribution might be compromised.\" >&2\n    echo \"If you updated your Maven version, you need to update the specified distributionSha256Sum property.\" >&2\n    exit 1\n  fi\nfi\n\n# unzip and move\nif command -v unzip >/dev/null; then\n  unzip ${__MVNW_QUIET_UNZIP:+\"$__MVNW_QUIET_UNZIP\"} \"$TMP_DOWNLOAD_DIR/$distributionUrlName\" -d \"$TMP_DOWNLOAD_DIR\" || die \"failed to unzip\"\nelse\n  tar xzf${__MVNW_QUIET_TAR:+\"$__MVNW_QUIET_TAR\"} \"$TMP_DOWNLOAD_DIR/$distributionUrlName\" -C \"$TMP_DOWNLOAD_DIR\" || die \"failed to untar\"\nfi\n\n# Find the actual extracted directory name (handles snapshots where filename != directory name)\nactualDistributionDir=\"\"\n\n# First try the expected directory name (for regular distributions)\nif [ -d \"$TMP_DOWNLOAD_DIR/$distributionUrlNameMain\" ]; then\n  if [ -f \"$TMP_DOWNLOAD_DIR/$distributionUrlNameMain/bin/$MVN_CMD\" ]; then\n    actualDistributionDir=\"$distributionUrlNameMain\"\n  fi\nfi\n\n# If not found, search for any directory with the Maven executable (for snapshots)\nif [ -z \"$actualDistributionDir\" ]; then\n  # enable globbing to iterate over items\n  set +f\n  for dir in \"$TMP_DOWNLOAD_DIR\"/*; do\n    if [ -d \"$dir\" ]; then\n      if [ -f \"$dir/bin/$MVN_CMD\" ]; then\n        actualDistributionDir=\"$(basename \"$dir\")\"\n        break\n      fi\n    fi\n  done\n  set -f\nfi\n\nif [ -z \"$actualDistributionDir\" ]; then\n  verbose \"Contents of $TMP_DOWNLOAD_DIR:\"\n  verbose \"$(ls -la \"$TMP_DOWNLOAD_DIR\")\"\n  die \"Could not find Maven distribution directory in extracted archive\"\nfi\n\nverbose \"Found extracted Maven distribution directory: $actualDistributionDir\"\nprintf %s\\\\n \"$distributionUrl\" >\"$TMP_DOWNLOAD_DIR/$actualDistributionDir/mvnw.url\"\nmv -- \"$TMP_DOWNLOAD_DIR/$actualDistributionDir\" \"$MAVEN_HOME\" || [ -d \"$MAVEN_HOME\" ] || die \"fail to move MAVEN_HOME\"\n\nclean || :\nexec_maven \"$@\"\n"
+              },
+              {
+                "name": "mvnw.cmd",
+                "type": "file",
+                "path": "ef3-fsd2\\Backend\\package\\mvnw.cmd",
+                "size": 8292,
+                "content": "<# : batch portion\n@REM ----------------------------------------------------------------------------\n@REM Licensed to the Apache Software Foundation (ASF) under one\n@REM or more contributor license agreements.  See the NOTICE file\n@REM distributed with this work for additional information\n@REM regarding copyright ownership.  The ASF licenses this file\n@REM to you under the Apache License, Version 2.0 (the\n@REM \"License\"); you may not use this file except in compliance\n@REM with the License.  You may obtain a copy of the License at\n@REM\n@REM    http://www.apache.org/licenses/LICENSE-2.0\n@REM\n@REM Unless required by applicable law or agreed to in writing,\n@REM software distributed under the License is distributed on an\n@REM \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n@REM KIND, either express or implied.  See the License for the\n@REM specific language governing permissions and limitations\n@REM under the License.\n@REM ----------------------------------------------------------------------------\n\n@REM ----------------------------------------------------------------------------\n@REM Apache Maven Wrapper startup batch script, version 3.3.4\n@REM\n@REM Optional ENV vars\n@REM   MVNW_REPOURL - repo url base for downloading maven distribution\n@REM   MVNW_USERNAME/MVNW_PASSWORD - user and password for downloading maven\n@REM   MVNW_VERBOSE - true: enable verbose log; others: silence the output\n@REM ----------------------------------------------------------------------------\n\n@IF \"%__MVNW_ARG0_NAME__%\"==\"\" (SET __MVNW_ARG0_NAME__=%~nx0)\n@SET __MVNW_CMD__=\n@SET __MVNW_ERROR__=\n@SET __MVNW_PSMODULEP_SAVE=%PSModulePath%\n@SET PSModulePath=\n@FOR /F \"usebackq tokens=1* delims==\" %%A IN (`powershell -noprofile \"& {$scriptDir='%~dp0'; $script='%__MVNW_ARG0_NAME__%'; icm -ScriptBlock ([Scriptblock]::Create((Get-Content -Raw '%~f0'))) -NoNewScope}\"`) DO @(\n  IF \"%%A\"==\"MVN_CMD\" (set __MVNW_CMD__=%%B) ELSE IF \"%%B\"==\"\" (echo %%A) ELSE (echo %%A=%%B)\n)\n@SET PSModulePath=%__MVNW_PSMODULEP_SAVE%\n@SET __MVNW_PSMODULEP_SAVE=\n@SET __MVNW_ARG0_NAME__=\n@SET MVNW_USERNAME=\n@SET MVNW_PASSWORD=\n@IF NOT \"%__MVNW_CMD__%\"==\"\" (\"%__MVNW_CMD__%\" %*)\n@echo Cannot start maven from wrapper >&2 && exit /b 1\n@GOTO :EOF\n: end batch / begin powershell #>\n\n$ErrorActionPreference = \"Stop\"\nif ($env:MVNW_VERBOSE -eq \"true\") {\n  $VerbosePreference = \"Continue\"\n}\n\n# calculate distributionUrl, requires .mvn/wrapper/maven-wrapper.properties\n$distributionUrl = (Get-Content -Raw \"$scriptDir/.mvn/wrapper/maven-wrapper.properties\" | ConvertFrom-StringData).distributionUrl\nif (!$distributionUrl) {\n  Write-Error \"cannot read distributionUrl property in $scriptDir/.mvn/wrapper/maven-wrapper.properties\"\n}\n\nswitch -wildcard -casesensitive ( $($distributionUrl -replace '^.*/','') ) {\n  \"maven-mvnd-*\" {\n    $USE_MVND = $true\n    $distributionUrl = $distributionUrl -replace '-bin\\.[^.]*$',\"-windows-amd64.zip\"\n    $MVN_CMD = \"mvnd.cmd\"\n    break\n  }\n  default {\n    $USE_MVND = $false\n    $MVN_CMD = $script -replace '^mvnw','mvn'\n    break\n  }\n}\n\n# apply MVNW_REPOURL and calculate MAVEN_HOME\n# maven home pattern: ~/.m2/wrapper/dists/{apache-maven-<version>,maven-mvnd-<version>-<platform>}/<hash>\nif ($env:MVNW_REPOURL) {\n  $MVNW_REPO_PATTERN = if ($USE_MVND -eq $False) { \"/org/apache/maven/\" } else { \"/maven/mvnd/\" }\n  $distributionUrl = \"$env:MVNW_REPOURL$MVNW_REPO_PATTERN$($distributionUrl -replace \"^.*$MVNW_REPO_PATTERN\",'')\"\n}\n$distributionUrlName = $distributionUrl -replace '^.*/',''\n$distributionUrlNameMain = $distributionUrlName -replace '\\.[^.]*$','' -replace '-bin$',''\n\n$MAVEN_M2_PATH = \"$HOME/.m2\"\nif ($env:MAVEN_USER_HOME) {\n  $MAVEN_M2_PATH = \"$env:MAVEN_USER_HOME\"\n}\n\nif (-not (Test-Path -Path $MAVEN_M2_PATH)) {\n    New-Item -Path $MAVEN_M2_PATH -ItemType Directory | Out-Null\n}\n\n$MAVEN_WRAPPER_DISTS = $null\nif ((Get-Item $MAVEN_M2_PATH).Target[0] -eq $null) {\n  $MAVEN_WRAPPER_DISTS = \"$MAVEN_M2_PATH/wrapper/dists\"\n} else {\n  $MAVEN_WRAPPER_DISTS = (Get-Item $MAVEN_M2_PATH).Target[0] + \"/wrapper/dists\"\n}\n\n$MAVEN_HOME_PARENT = \"$MAVEN_WRAPPER_DISTS/$distributionUrlNameMain\"\n$MAVEN_HOME_NAME = ([System.Security.Cryptography.SHA256]::Create().ComputeHash([byte[]][char[]]$distributionUrl) | ForEach-Object {$_.ToString(\"x2\")}) -join ''\n$MAVEN_HOME = \"$MAVEN_HOME_PARENT/$MAVEN_HOME_NAME\"\n\nif (Test-Path -Path \"$MAVEN_HOME\" -PathType Container) {\n  Write-Verbose \"found existing MAVEN_HOME at $MAVEN_HOME\"\n  Write-Output \"MVN_CMD=$MAVEN_HOME/bin/$MVN_CMD\"\n  exit $?\n}\n\nif (! $distributionUrlNameMain -or ($distributionUrlName -eq $distributionUrlNameMain)) {\n  Write-Error \"distributionUrl is not valid, must end with *-bin.zip, but found $distributionUrl\"\n}\n\n# prepare tmp dir\n$TMP_DOWNLOAD_DIR_HOLDER = New-TemporaryFile\n$TMP_DOWNLOAD_DIR = New-Item -Itemtype Directory -Path \"$TMP_DOWNLOAD_DIR_HOLDER.dir\"\n$TMP_DOWNLOAD_DIR_HOLDER.Delete() | Out-Null\ntrap {\n  if ($TMP_DOWNLOAD_DIR.Exists) {\n    try { Remove-Item $TMP_DOWNLOAD_DIR -Recurse -Force | Out-Null }\n    catch { Write-Warning \"Cannot remove $TMP_DOWNLOAD_DIR\" }\n  }\n}\n\nNew-Item -Itemtype Directory -Path \"$MAVEN_HOME_PARENT\" -Force | Out-Null\n\n# Download and Install Apache Maven\nWrite-Verbose \"Couldn't find MAVEN_HOME, downloading and installing it ...\"\nWrite-Verbose \"Downloading from: $distributionUrl\"\nWrite-Verbose \"Downloading to: $TMP_DOWNLOAD_DIR/$distributionUrlName\"\n\n$webclient = New-Object System.Net.WebClient\nif ($env:MVNW_USERNAME -and $env:MVNW_PASSWORD) {\n  $webclient.Credentials = New-Object System.Net.NetworkCredential($env:MVNW_USERNAME, $env:MVNW_PASSWORD)\n}\n[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\n$webclient.DownloadFile($distributionUrl, \"$TMP_DOWNLOAD_DIR/$distributionUrlName\") | Out-Null\n\n# If specified, validate the SHA-256 sum of the Maven distribution zip file\n$distributionSha256Sum = (Get-Content -Raw \"$scriptDir/.mvn/wrapper/maven-wrapper.properties\" | ConvertFrom-StringData).distributionSha256Sum\nif ($distributionSha256Sum) {\n  if ($USE_MVND) {\n    Write-Error \"Checksum validation is not supported for maven-mvnd. `nPlease disable validation by removing 'distributionSha256Sum' from your maven-wrapper.properties.\"\n  }\n  Import-Module $PSHOME\\Modules\\Microsoft.PowerShell.Utility -Function Get-FileHash\n  if ((Get-FileHash \"$TMP_DOWNLOAD_DIR/$distributionUrlName\" -Algorithm SHA256).Hash.ToLower() -ne $distributionSha256Sum) {\n    Write-Error \"Error: Failed to validate Maven distribution SHA-256, your Maven distribution might be compromised. If you updated your Maven version, you need to update the specified distributionSha256Sum property.\"\n  }\n}\n\n# unzip and move\nExpand-Archive \"$TMP_DOWNLOAD_DIR/$distributionUrlName\" -DestinationPath \"$TMP_DOWNLOAD_DIR\" | Out-Null\n\n# Find the actual extracted directory name (handles snapshots where filename != directory name)\n$actualDistributionDir = \"\"\n\n# First try the expected directory name (for regular distributions)\n$expectedPath = Join-Path \"$TMP_DOWNLOAD_DIR\" \"$distributionUrlNameMain\"\n$expectedMvnPath = Join-Path \"$expectedPath\" \"bin/$MVN_CMD\"\nif ((Test-Path -Path $expectedPath -PathType Container) -and (Test-Path -Path $expectedMvnPath -PathType Leaf)) {\n  $actualDistributionDir = $distributionUrlNameMain\n}\n\n# If not found, search for any directory with the Maven executable (for snapshots)\nif (!$actualDistributionDir) {\n  Get-ChildItem -Path \"$TMP_DOWNLOAD_DIR\" -Directory | ForEach-Object {\n    $testPath = Join-Path $_.FullName \"bin/$MVN_CMD\"\n    if (Test-Path -Path $testPath -PathType Leaf) {\n      $actualDistributionDir = $_.Name\n    }\n  }\n}\n\nif (!$actualDistributionDir) {\n  Write-Error \"Could not find Maven distribution directory in extracted archive\"\n}\n\nWrite-Verbose \"Found extracted Maven distribution directory: $actualDistributionDir\"\nRename-Item -Path \"$TMP_DOWNLOAD_DIR/$actualDistributionDir\" -NewName $MAVEN_HOME_NAME | Out-Null\ntry {\n  Move-Item -Path \"$TMP_DOWNLOAD_DIR/$MAVEN_HOME_NAME\" -Destination $MAVEN_HOME_PARENT | Out-Null\n} catch {\n  if (! (Test-Path -Path \"$MAVEN_HOME\" -PathType Container)) {\n    Write-Error \"fail to move MAVEN_HOME\"\n  }\n} finally {\n  try { Remove-Item $TMP_DOWNLOAD_DIR -Recurse -Force | Out-Null }\n  catch { Write-Warning \"Cannot remove $TMP_DOWNLOAD_DIR\" }\n}\n\nWrite-Output \"MVN_CMD=$MAVEN_HOME/bin/$MVN_CMD\"\n"
+              },
+              {
+                "name": "pom.xml",
+                "type": "file",
+                "path": "ef3-fsd2\\Backend\\package\\pom.xml",
+                "size": 3695,
+                "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n\txsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n\t<modelVersion>4.0.0</modelVersion>\n\t<parent>\n\t\t<groupId>org.springframework.boot</groupId>\n\t\t<artifactId>spring-boot-starter-parent</artifactId>\n\t\t<version>4.1.2</version>\n\t\t<relativePath/> <!-- lookup parent from repository -->\n\t</parent>\n\t<groupId>com.dinobox.rawr-x3</groupId>\n\t<artifactId>package</artifactId>\n\t<version>0.0.1-SNAPSHOT</version>\n\t<name/>\n\t<description/>\n\t<url/>\n\t<licenses>\n\t\t<license/>\n\t</licenses>\n\t<developers>\n\t\t<developer/>\n\t</developers>\n\t<scm>\n\t\t<connection/>\n\t\t<developerConnection/>\n\t\t<tag/>\n\t\t<url/>\n\t</scm>\n\t<properties>\n\t\t<java.version>21</java.version>\n\t</properties>\n\t<dependencies>\n    <!-- Persistence & Database -->\n    <dependency>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-data-jpa</artifactId>\n    </dependency>\n    <dependency>\n        <groupId>com.mysql</groupId>\n        <artifactId>mysql-connector-j</artifactId>\n        <scope>runtime</scope>\n    </dependency>\n\n    <!-- Web & REST -->\n    <dependency>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-web</artifactId>\n    </dependency>\n    <dependency>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-hateoas</artifactId>\n    </dependency>\n\n    <!-- Swagger / OpenAPI -->\n    <dependency>\n        <groupId>org.springdoc</groupId>\n        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>\n        <version>3.2.0</version> <!-- 3.2.0 might be too new or a typo, 2.5.0 is standard for Spring Boot 3.2.x -->\n    </dependency>\n\n    <!-- Utilities -->\n    <dependency>\n        <groupId>org.projectlombok</groupId>\n        <artifactId>lombok</artifactId>\n        <optional>true</optional>\n    </dependency>\n\n    <!-- Testing -->\n    <dependency>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-data-jpa-test</artifactId>\n        <scope>test</scope>\n    </dependency>\n    <dependency>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-webmvc-test</artifactId>\n        <scope>test</scope>\n    </dependency>\n    <dependency>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-hateoas-test</artifactId>\n        <scope>test</scope>\n    </dependency>\n</dependencies>\n\t<build>\n\t\t<plugins>\n\t\t\t<plugin>\n\t\t\t\t<groupId>org.springframework.boot</groupId>\n\t\t\t\t<artifactId>spring-boot-maven-plugin</artifactId>\n\t\t\t</plugin>\n\t\t\t<plugin>\n\t\t\t\t<groupId>org.apache.maven.plugins</groupId>\n\t\t\t\t<artifactId>maven-compiler-plugin</artifactId>\n\t\t\t\t<executions>\n\t\t\t\t\t<execution>\n\t\t\t\t\t\t<id>default-compile</id>\n\t\t\t\t\t\t<phase>compile</phase>\n\t\t\t\t\t\t<goals>\n\t\t\t\t\t\t\t<goal>compile</goal>\n\t\t\t\t\t\t</goals>\n\t\t\t\t\t\t<configuration>\n\t\t\t\t\t\t\t<annotationProcessorPaths>\n\t\t\t\t\t\t\t\t<path>\n\t\t\t\t\t\t\t\t\t<groupId>org.projectlombok</groupId>\n\t\t\t\t\t\t\t\t\t<artifactId>lombok</artifactId>\n\t\t\t\t\t\t\t\t</path>\n\t\t\t\t\t\t\t</annotationProcessorPaths>\n\t\t\t\t\t\t</configuration>\n\t\t\t\t\t</execution>\n\t\t\t\t\t<execution>\n\t\t\t\t\t\t<id>default-testCompile</id>\n\t\t\t\t\t\t<phase>test-compile</phase>\n\t\t\t\t\t\t<goals>\n\t\t\t\t\t\t\t<goal>testCompile</goal>\n\t\t\t\t\t\t</goals>\n\t\t\t\t\t\t<configuration>\n\t\t\t\t\t\t\t<annotationProcessorPaths>\n\t\t\t\t\t\t\t\t<path>\n\t\t\t\t\t\t\t\t\t<groupId>org.projectlombok</groupId>\n\t\t\t\t\t\t\t\t\t<artifactId>lombok</artifactId>\n\t\t\t\t\t\t\t\t</path>\n\t\t\t\t\t\t\t</annotationProcessorPaths>\n\t\t\t\t\t\t</configuration>\n\t\t\t\t\t</execution>\n\t\t\t\t</executions>\n\t\t\t</plugin>\n\t\t</plugins>\n\t</build>\n\n</project>\n"
+              },
+              {
+                "name": "run.txt",
+                "type": "file",
+                "path": "ef3-fsd2\\Backend\\package\\run.txt",
+                "size": 304198,
+                "content": null,
+                "note": "skipped: binary content"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Frontend",
+        "type": "folder",
+        "path": "ef3-fsd2\\Frontend",
+        "children": []
+      },
+      {
+        "name": "README.md",
+        "type": "file",
+        "path": "ef3-fsd2\\README.md",
+        "size": 41,
+        "content": "# ef3-fsd2\nSomething like that i think\n"
+      },
+      {
+        "name": "scan_to_json.py",
+        "type": "file",
+        "path": "ef3-fsd2\\scan_to_json.py",
+        "size": 7959,
+        "content": "# !/usr/bin/env python3\n\"\"\"\nscan_to_json.py\n\nRecursively scans a folder (and all of its subfolders / sub-subfolders) and\ndumps the complete tree — directory structure + text file contents — into a\nstructured JSON file called `context.json`.\n\nUsage:\n    python scan_to_json.py                # scan current directory\n    python scan_to_json.py /path/to/root  # scan a specific folder\n    python scan_to_json.py -o out.json --max-size 1048576\n\nThe generated JSON has this shape:\n\n    {\n      \"root\": \"/abs/path\",\n      \"generated_at\": \"...\",\n      \"summary\": {\"files\": 12, \"folders\": 3},\n      \"tree\": {\n        \"name\": \"root\",\n        \"type\": \"folder\",\n        \"path\": \"root\",\n        \"children\": [\n          {\"name\": \"a.txt\", \"type\": \"file\", \"path\": \"root/a.txt\", \"size\": 5, \"content\": \"hello\"},\n          {\"name\": \"sub\",  \"type\": \"folder\", \"path\": \"root/sub\", \"children\": [ ... ]}\n        ]\n      }\n    }\n\"\"\"\n\nfrom __future__ import annotations\n\nimport argparse\nimport json\nimport os\nimport sys\nfrom datetime import datetime\nfrom pathlib import Path\n\n# ---------------------------------------------------------------------------\n# Configuration\n# ---------------------------------------------------------------------------\n\n# Folders that are almost never useful to dump (change if you want them)\nSKIP_DIRS = {\n    \".git\", \".svn\", \".hg\",\n    \"node_modules\", \"__pycache__\", \".venv\", \"venv\", \"env\",\n    \".idea\", \".vscode\",\n    \"dist\", \"build\", \".next\", \".cache\",\n    \".pytest_cache\", \".mypy_cache\", \".ruff_cache\",\n}\n\n# Extensions that are always treated as binary\nSKIP_EXTENSIONS = {\n    \".pyc\", \".pyo\", \".so\", \".dll\", \".dylib\", \".exe\", \".bin\", \".o\", \".a\",\n    \".jpg\", \".jpeg\", \".png\", \".gif\", \".bmp\", \".ico\", \".webp\", \".tiff\",\n    \".mp3\", \".mp4\", \".avi\", \".mov\", \".wav\", \".flac\", \".mkv\", \".webm\",\n    \".zip\", \".tar\", \".gz\", \".rar\", \".7z\", \".bz2\", \".xz\",\n    \".pdf\", \".doc\", \".docx\", \".xls\", \".xlsx\", \".ppt\", \".pptx\",\n    \".ttf\", \".otf\", \".woff\", \".woff2\", \".eot\",\n    \".sqlite\", \".sqlite3\", \".db\",\n}\n\nDEFAULT_MAX_SIZE = 5 * 1024 * 1024  # 5 MB per file\n\n\n# ---------------------------------------------------------------------------\n# Helpers\n# ---------------------------------------------------------------------------\n\ndef is_probably_text(path: Path, sample_size: int = 8192) -> bool:\n    \"\"\"Read a small chunk and decide if the file looks like text.\"\"\"\n    try:\n        with path.open(\"rb\") as f:\n            chunk = f.read(sample_size)\n    except OSError:\n        return False\n    if b\"\\x00\" in chunk:          # null byte → binary\n        return False\n    try:\n        chunk.decode(\"utf-8\")\n    except UnicodeDecodeError:\n        try:\n            chunk.decode(\"latin-1\")\n        except UnicodeDecodeError:\n            return False\n    return True\n\n\ndef read_file(path: Path, max_size: int) -> dict:\n    \"\"\"Return {size, content, [note/error]} for a single file.\"\"\"\n    try:\n        size = path.stat().st_size\n    except OSError as e:\n        return {\"size\": None, \"content\": None, \"error\": f\"stat failed: {e}\"}\n\n    if size > max_size:\n        return {\"size\": size, \"content\": None,\n                \"note\": f\"skipped: larger than {max_size} bytes\"}\n\n    if path.suffix.lower() in SKIP_EXTENSIONS:\n        return {\"size\": size, \"content\": None,\n                \"note\": \"skipped: binary extension\"}\n\n    if not is_probably_text(path):\n        return {\"size\": size, \"content\": None,\n                \"note\": \"skipped: binary content\"}\n\n    for encoding in (\"utf-8\", \"utf-8-sig\", \"latin-1\"):\n        try:\n            return {\"size\": size, \"content\": path.read_text(encoding=encoding)}\n        except UnicodeDecodeError:\n            continue\n        except Exception as e:\n            return {\"size\": size, \"content\": None, \"error\": str(e)}\n\n    return {\"size\": size, \"content\": None, \"error\": \"could not decode\"}\n\n\ndef rel_path(p: Path, root: Path) -> str:\n    \"\"\"Path relative to the root's *parent*, so the root name is included.\"\"\"\n    try:\n        return str(p.relative_to(root.parent))\n    except ValueError:\n        return str(p)\n\n\n# ---------------------------------------------------------------------------\n# Recursive scan\n# ---------------------------------------------------------------------------\n\ndef scan(path: Path, root: Path, max_size: int, skip_dirs: set[str]) -> dict:\n    \"\"\"Return a nested dict describing `path` and everything below it.\"\"\"\n    node: dict = {\n        \"name\": path.name or str(path),\n        \"type\": \"folder\",\n        \"path\": rel_path(path, root),\n        \"children\": [],\n    }\n\n    try:\n        entries = sorted(path.iterdir(),\n                         key=lambda p: (p.is_file(), p.name.lower()))\n    except OSError as e:\n        node[\"error\"] = f\"cannot list directory: {e}\"\n        return node\n\n    for entry in entries:\n        if entry.is_symlink():\n            node[\"children\"].append({\n                \"name\": entry.name,\n                \"type\": \"symlink\",\n                \"path\": rel_path(entry, root),\n                \"target\": os.readlink(entry),\n            })\n\n        elif entry.is_dir():\n            if entry.name in skip_dirs:\n                node[\"children\"].append({\n                    \"name\": entry.name,\n                    \"type\": \"folder\",\n                    \"path\": rel_path(entry, root),\n                    \"skipped\": True,\n                })\n            else:\n                node[\"children\"].append(\n                    scan(entry, root, max_size, skip_dirs)\n                )\n\n        elif entry.is_file():\n            file_node = {\n                \"name\": entry.name,\n                \"type\": \"file\",\n                \"path\": rel_path(entry, root),\n            }\n            file_node.update(read_file(entry, max_size))\n            node[\"children\"].append(file_node)\n\n    return node\n\n\ndef count_nodes(node: dict) -> tuple[int, int]:\n    \"\"\"Return (file_count, folder_count) under `node`.\"\"\"\n    files = folders = 0\n    for child in node.get(\"children\", []):\n        if child[\"type\"] == \"folder\" and not child.get(\"skipped\"):\n            folders += 1\n            f, d = count_nodes(child)\n            files += f\n            folders += d\n        elif child[\"type\"] == \"file\":\n            files += 1\n    return files, folders\n\n\n# ---------------------------------------------------------------------------\n# Main\n# ---------------------------------------------------------------------------\n\ndef main() -> None:\n    ap = argparse.ArgumentParser(\n        description=\"Recursively dump a folder tree (+ file contents) to context.json\"\n    )\n    ap.add_argument(\"root\", nargs=\"?\", default=\".\",\n                    help=\"Root folder to scan (default: current directory)\")\n    ap.add_argument(\"-o\", \"--output\", default=\"context.json\",\n                    help=\"Output JSON file (default: context.json)\")\n    ap.add_argument(\"--max-size\", type=int, default=DEFAULT_MAX_SIZE,\n                    help=f\"Max bytes per file to include content \"\n                         f\"(default {DEFAULT_MAX_SIZE})\")\n    args = ap.parse_args()\n\n    root = Path(args.root).resolve()\n    if not root.is_dir():\n        sys.exit(f\"Error: '{root}' is not a directory\")\n\n    print(f\"Scanning: {root}\")\n    tree = scan(root, root, args.max_size, SKIP_DIRS)\n\n    files, folders = count_nodes(tree)\n    output = {\n        \"root\": str(root),\n        \"generated_at\": datetime.now().isoformat(timespec=\"seconds\"),\n        \"summary\": {\"files\": files, \"folders\": folders},\n        \"tree\": tree,\n    }\n\n    out_path = Path(args.output)\n    with out_path.open(\"w\", encoding=\"utf-8\") as f:\n        json.dump(output, f, indent=2, ensure_ascii=False)\n\n    print(f\"Scanned {files} files in {folders} folders\")\n    print(f\"Wrote: {out_path.resolve()}\")\n\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ]
+  }
+}
