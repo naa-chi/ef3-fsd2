@@ -4,7 +4,7 @@ import { useCart } from '../context/CartContext';
 import { useBalance } from '../context/BalanceContext';
 import { useAuth } from '../context/AuthContext';
 import { useLocation as useGeoLocation } from '../hooks/useLocation';
-import { packagesApi } from '../services/api';
+import api, { packagesApi } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../components/Toast';
 
@@ -29,6 +29,10 @@ export function Cart() {
       navigate('/login');
       return;
     }
+    if (!user.username) {
+      toast('User session is corrupted. Please log out and log back in.', 'error');
+      return;
+    }
     if (total > balance) {
       toast('Insufficient balance. Please top up.', 'error');
       return;
@@ -40,12 +44,24 @@ export function Cart() {
 
     setCheckingOut(true);
     try {
+      // 1. Create the Package
       const pkg = await packagesApi.create({
         currentState: 'PENDING',
         location: `${geo.city || 'Unknown'} · ${section} · ${address}`
       });
       
-      // Save order details (including the exact items list) for consistent display
+      if (!pkg || !pkg.orderId) {
+        throw new Error("Backend did not return a tracking code.");
+      }
+      
+      // 2. Create the Order Receipt
+      await api.post('/orders', {
+        username: user.username,
+        packageOrderId: pkg.orderId,
+        totalAmount: total
+      });
+
+      // 3. Save order details for UI display
       const orderDetails = {
         totalPaid: total,
         items: items.map(i => ({
@@ -61,7 +77,9 @@ export function Cart() {
       toast('Order placed! Tracking started.', 'success');
       navigate('/orders');
     } catch (e) {
-      toast('Checkout failed: ' + e.message, 'error');
+      // If the backend returns a 400, show the actual error message
+      const errorMsg = e.response?.data || e.message;
+      toast('Checkout failed: ' + errorMsg, 'error');
     } finally {
       setCheckingOut(false);
     }

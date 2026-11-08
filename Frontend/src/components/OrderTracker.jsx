@@ -1,7 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePackageSimulation } from '../hooks/usePackageSimulation';
 import { useBalance } from '../context/BalanceContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import api from '../services/api';
 
 const STATE_CONFIG = {
   PENDING:          { label: 'Pending',          color: '#f59e0b', icon: '⏳' },
@@ -11,24 +12,41 @@ const STATE_CONFIG = {
   LOST:             { label: 'Lost',             color: '#ef4444', icon: '✗' }
 };
 
-export function OrderTracker({ order }) {
-  // Use orderId (string) for consistent simulation tracking
-  const orderId = order.orderId || order.id;
-  const { state, nextChangeIn } = usePackageSimulation(orderId, order.currentState);
+export function OrderTracker({ order, onComplete }) {
+  const simulationId = order.id;
+  const trackingCode = order.orderId;
+  const { state, nextChangeIn } = usePackageSimulation(simulationId, trackingCode, order.currentState);
   const { addFunds } = useBalance();
+
   const [refunding, setRefunding] = useState(false);
-  const [refunded, setRefunded] = useState(false);
+  const [refunded, setRefunded] = useState(order.isRefunded || false);
   const [showDetails, setShowDetails] = useState(false);
-  
-  // Retrieve saved order details (products list)
   const [orderDetails, setOrderDetails] = useState(null);
 
+  // Keep latest onComplete without resetting the effect on every parent render
+  const onCompleteRef = useRef(onComplete);
   useEffect(() => {
-    if (orderId) {
-      const saved = localStorage.getItem(`dinobox_order_${orderId}`);
-      if (saved) setOrderDetails(JSON.parse(saved));
-    }
-  }, [orderId]);
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
+  // Fire onComplete ONCE when the order reaches a "done" state
+  const hasFired = useRef(false);
+  useEffect(() => {
+    const isDone = state === 'ARRIVED' || (state === 'LOST' && refunded);
+    if (!isDone || hasFired.current) return;
+
+    hasFired.current = true;
+    // Show the final state for 3s, then let the parent fly it to the receipts icon
+    const timer = setTimeout(() => onCompleteRef.current?.(), 3000);
+    return () => clearTimeout(timer);
+  }, [state, refunded]);
+
+  // Pull saved line-items from localStorage
+  useEffect(() => {
+    if (!trackingCode) return;
+    const saved = localStorage.getItem(`dinobox_order_${trackingCode}`);
+    if (saved) setOrderDetails(JSON.parse(saved));
+  }, [trackingCode]);
 
   const config = STATE_CONFIG[state] || STATE_CONFIG.PENDING;
   const isTerminal = state === 'ARRIVED' || state === 'LOST';
@@ -36,9 +54,18 @@ export function OrderTracker({ order }) {
 
   const handleRefund = async () => {
     setRefunding(true);
-    const delay = 20 + Math.random() * 10; // 20-30s
+    // 2-4 second simulated processing
+    const delay = 2 + Math.random() * 2;
     await new Promise(r => setTimeout(r, delay * 1000));
+
     addFunds(totalPaid);
+
+    try {
+      await api.put(`/orders/${order.id}/refund`);
+    } catch (e) {
+      console.error("Refund failed", e);
+    }
+
     setRefunded(true);
     setRefunding(false);
   };
@@ -50,7 +77,7 @@ export function OrderTracker({ order }) {
     <motion.div layout className="glass rounded-2xl p-5 relative overflow-hidden" aria-live="polite">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <p className="text-xs text-dino-muted font-mono">Order #{orderId}</p>
+          <p className="text-xs text-dino-muted font-mono">Order #{trackingCode}</p>
           <p className="text-sm text-dino-text mt-1">{order.location}</p>
         </div>
         <div className="text-right">
@@ -93,7 +120,6 @@ export function OrderTracker({ order }) {
         />
       </div>
 
-      {/* Expandable Order Details */}
       {orderDetails?.items && orderDetails.items.length > 0 && (
         <div className="border-t border-dino-accent/10 pt-3">
           <button
@@ -103,7 +129,7 @@ export function OrderTracker({ order }) {
             {showDetails ? 'Hide' : 'View'} purchased items ({orderDetails.items.length})
             <span className={`transform transition-transform ${showDetails ? 'rotate-180' : ''}`}>▼</span>
           </button>
-          
+
           <AnimatePresence>
             {showDetails && (
               <motion.div

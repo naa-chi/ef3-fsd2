@@ -3,13 +3,13 @@ import { createContext, useContext, useState, useEffect } from 'react';
 const BalanceContext = createContext(null);
 
 export function BalanceProvider({ children }) {
-  const [balance, setBalance] = useState(0);
-
-  useEffect(() => {
+  // Lazy init: read localStorage synchronously BEFORE first render
+  const [balance, setBalance] = useState(() => {
     const stored = localStorage.getItem('dinobox_balance');
-    if (stored) setBalance(Number(stored));
-  }, []);
+    return stored ? Number(stored) : 0;
+  });
 
+  // Persist on every change (safe now because init isn't 0)
   useEffect(() => {
     localStorage.setItem('dinobox_balance', balance);
   }, [balance]);
