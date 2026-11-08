@@ -49,4 +49,10 @@ public class PackageController {
         service.deletePackage(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(summary = "Get package by tracking code", description = "Public endpoint for users to track their packages")
+    @GetMapping("/track/{orderId}")
+    public ResponseEntity<PackageModel> getByTrackingCode(@PathVariable String orderId) {
+        return ResponseEntity.ok(service.getPackageByOrderId(orderId));
+    }
 }

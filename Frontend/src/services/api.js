@@ -16,7 +16,8 @@ export const packagesApi = {
   getAll: () => api.get('/Packages').then(r => r.data),
   getById: (id) => api.get(`/Packages/${id}`).then(r => r.data),
   create: (pkg) => api.post('/Packages', pkg).then(r => r.data),
-  update: (id, pkg) => api.put(`/Packages/${id}`, pkg).then(r => r.data)
+  update: (id, pkg) => api.put(`/Packages/${id}`, pkg).then(r => r.data),
+  getByTrackingCode: (code) => api.get(`/Packages/track/${code}`).then(r => r.data)
 };
 
 export default api;

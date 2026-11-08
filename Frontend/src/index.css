@@ -2,83 +2,636 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
+/* ============================================================
+   LATE-2000s THEME (Web 2.0 / early Twitter-Facebook era)
+   Toggle via [data-theme="light"] | [data-theme="dark"]
+   ============================================================ */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* page */
+  --page-grad-1: #c0deed;   /* Twitter 2008 light blue */
+  --page-grad-2: #dbeaf5;
+  --page-grad-3: #eaf3fa;
+
+  /* panels (glass class) */
+  --panel-grad-1: #ffffff;
+  --panel-grad-2: #eef4fa;
+  --panel-border: #a4b8cc;
+  --panel-highlight: #ffffff;
+  --panel-shadow: rgba(0, 0, 0, 0.08);
+
+  /* text */
+  --text-main: #1e2a38;
+  --text-muted: #5a6b7d;
+  --heading: #14304d;
+
+  /* links */
+  --link: #1c5ea3;
+  --link-hover: #0d3e70;
+
+  /* buttons */
+  --btn-gloss-1: #a4cff5;
+  --btn-gloss-2: #4a90d9;
+  --btn-gloss-3: #1c5ea3;
+  --btn-gloss-4: #2f6fb8;
+  --btn-border: #103f73;
+  --btn-text: #ffffff;
+
+  --input-bg: #ffffff;
+  --input-border: #a4b8cc;
+
+  --surface-sunken: #e6eef7;
+  --divider: #b6c7db;
+
+  --badge-new-1: #ffe476;
+  --badge-new-2: #f0ad4e;
 }
 
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --page-grad-1: #10161e;
+  --page-grad-2: #0a0f15;
+  --page-grad-3: #05080c;
+
+  --panel-grad-1: #232b36;
+  --panel-grad-2: #151b23;
+  --panel-border: #37424f;
+  --panel-highlight: #3a4553;
+  --panel-shadow: rgba(0, 0, 0, 0.4);
+
+  --text-main: #e2e8f0;
+  --text-muted: #93a0b3;
+  --heading: #e2e8f0;
+
+  --link: #6cb4ff;
+  --link-hover: #96ccff;
+
+  --btn-gloss-1: #4a78b3;
+  --btn-gloss-2: #2f6fb8;
+  --btn-gloss-3: #103f73;
+  --btn-gloss-4: #1c5ea3;
+  --btn-border: #0a2a4d;
+  --btn-text: #ffffff;
+
+  --input-bg: #1e252f;
+  --input-border: #3a4553;
+
+  --surface-sunken: #1a2029;
+  --divider: #2f3a47;
+
+  --badge-new-1: #d1a326;
+  --badge-new-2: #a67712;
+}
+
+/* ---------- Base ---------- */
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
-  font-family: 'Space Grotesk', system-ui, sans-serif;
-  background: #0a0a0f;
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-main);
+  background-color: var(--page-grad-2);
+  background-image:
+    radial-gradient(ellipse at top, var(--page-grad-1) 0%, transparent 70%),
+    linear-gradient(to bottom, var(--page-grad-2) 0%, var(--page-grad-3) 100%);
+  background-attachment: fixed;
   overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Focus styles for accessibility */
-:focus-visible {
-  outline: 2px solid #7c5cff;
-  outline-offset: 3px;
-  border-radius: 4px;
+/* ---------- Defensive text-color rules ---------- */
+/* Late-2000s sites had explicit dark text on light surfaces. */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--heading);
+  letter-spacing: -0.01em;
 }
 
-/* Skip link for accessibility */
+p, li, td, th, dd, dt, label, span, div {
+  color: inherit;
+}
+
+/* Force glass cards to inherit main text color,
+   fixing any "white on white" issues from prior themes. */
+.glass,
+.glass h1, .glass h2, .glass h3, .glass h4, .glass h5, .glass h6,
+.glass p, .glass span:not([class*="text-"]),
+.glass div:not([class*="bg-"]):not([class*="from-"]):not([class*="to-"]) {
+  color: var(--text-main);
+}
+
+/* Preserve explicit utility classes */
+.text-dino-muted { color: var(--text-muted) !important; }
+.text-dino-text  { color: var(--text-main)  !important; }
+.text-dino-glow  { color: var(--link)       !important; }
+.text-dino-accent{ color: var(--link)       !important; }
+.text-dino-mint  { color: #2e8b57          !important; }
+.text-dino-danger{ color: #c9302c          !important; }
+.text-dino-warn  { color: #b5791b          !important; }
+
+[data-theme="dark"] .text-dino-mint  { color: #6ee7a0 !important; }
+[data-theme="dark"] .text-dino-danger{ color: #ff8080 !important; }
+[data-theme="dark"] .text-dino-warn  { color: #ffc46b !important; }
+
+/* ---------- Headings glow (dark mode only) ---------- */
+.gradient-text {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  -webkit-text-fill-color: var(--heading);
+  color: var(--heading);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+[data-theme="dark"] .gradient-text {
+  color: var(--heading);
+  -webkit-text-fill-color: var(--heading);
+  text-shadow:
+    0 0 8px rgba(108, 180, 255, 0.4),
+    0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- Skip link ---------- */
 .skip-link {
   position: absolute;
   top: -40px;
   left: 0;
-  background: #7c5cff;
-  color: white;
-  padding: 8px 16px;
+  background: var(--link);
+  color: #fff;
+  padding: 6px 14px;
+  font-size: 12px;
   z-index: 100;
+  border: 1px solid var(--link-hover);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
   transition: top 0.2s;
 }
-.skip-link:focus {
-  top: 0;
-}
+.skip-link:focus { top: 0; }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: #0a0a0f; }
+/* ---------- Scrollbar (chunky, glossed) ---------- */
+::-webkit-scrollbar { width: 14px; }
+::-webkit-scrollbar-track {
+  background: var(--surface-sunken);
+  box-shadow: inset 1px 0 0 var(--divider);
+}
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #7c5cff, #34d399);
-  border-radius: 5px;
+  background: linear-gradient(to bottom, #f5f9ff 0%, #c5d3e2 48%, #a6b7cc 50%, #c2d0e0 100%);
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 #ffffff;
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #455260 0%, #2c3540 50%, #1f252c 100%);
+  border: 1px solid #455260;
+  box-shadow: inset 0 1px 0 #5b6a7a;
 }
 
-/* Glassmorphism panel */
+/* ---------- Focus (dotted, very aughts) ---------- */
+:focus-visible {
+  outline: 2px dotted var(--link);
+  outline-offset: 2px;
+}
+
+/* ---------- Glass panels → late-2000s cards ---------- */
 .glass {
-  background: rgba(18, 18, 26, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(124, 92, 255, 0.15);
+  background: linear-gradient(to bottom, var(--panel-grad-1) 0%, var(--panel-grad-2) 100%);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 1px 0 var(--panel-highlight),
+    0 1px 2px var(--panel-shadow),
+    0 2px 6px var(--panel-shadow);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.glass:hover {
+  border-color: var(--divider);
+  box-shadow:
+    inset 0 1px 0 var(--panel-highlight),
+    0 2px 4px var(--panel-shadow),
+    0 4px 12px var(--panel-shadow);
 }
 
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #a78bfa 0%, #34d399 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Button base */
+/* ---------- Buttons ---------- */
 .btn {
-  @apply px-6 py-3 rounded-xl font-medium transition-all duration-300
-         focus-visible:outline-2 focus-visible:outline-offset-2;
+  display: inline-block;
+  padding: 7px 16px;
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid var(--input-border);
+  color: var(--text-main);
+  background: linear-gradient(to bottom, #ffffff 0%, #eef4fa 50%, #dde8f3 100%);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 1px 0 #ffffff, 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: background 0.15s, border-color 0.15s;
 }
+.btn:hover { background: linear-gradient(to bottom, #ffffff 0%, #dfeaf5 50%, #c8d6e5 100%); }
+.btn:active { box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.12); }
+
+/* The signature late-2000s glossy pill */
 .btn-primary {
-  background: linear-gradient(135deg, #7c5cff 0%, #a78bfa 100%);
-  color: white;
-  box-shadow: 0 4px 20px rgba(124, 92, 255, 0.4);
+  position: relative;
+  display: inline-block;
+  padding: 8px 20px;
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 999px;             /* pill = Web 2.0 signature */
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--btn-text);
+  border: 1px solid var(--btn-border);
+  background: linear-gradient(
+    to bottom,
+    var(--btn-gloss-1) 0%,
+    var(--btn-gloss-2) 49%,
+    var(--btn-gloss-3) 51%,
+    var(--btn-gloss-4) 100%
+  );
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+    0 1px 2px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: filter 0.15s, box-shadow 0.15s;
 }
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(124, 92, 255, 0.6);
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 49%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
+  border-radius: 999px 999px 0 0;
+  pointer-events: none;
 }
-.btn-primary:active { transform: translateY(0); }
+.btn-primary > * { position: relative; z-index: 1; }
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-primary:active {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  filter: brightness(0.94);
+}
 .btn-primary:disabled {
-  opacity: 0.5;
+  opacity: 0.55;
   cursor: not-allowed;
-  transform: none;
+  filter: none;
+}
+
+/* ---------- Inputs ---------- */
+input,
+select,
+textarea {
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  font-size: 12px;
+  color: var(--text-main);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 3px;
+  padding: 6px 8px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--link);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.08),
+    0 0 0 3px rgba(74, 144, 217, 0.22);
+}
+
+/* ---------- Links ---------- */
+a:not(.btn):not(.btn-primary) {
+  color: var(--link);
+  text-decoration: none;
+}
+a:not(.btn):not(.btn-primary):hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+/* ---------- Navbar gloss strip ---------- */
+nav.glass {
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  background: linear-gradient(to bottom, #f5faff 0%, #dce6f1 100%);
+  box-shadow:
+    inset 0 -1px 0 var(--panel-border),
+    0 2px 6px rgba(0, 0, 0, 0.08);
+}
+[data-theme="dark"] nav.glass {
+  background: linear-gradient(to bottom, #232b36 0%, #151b23 100%);
+}
+
+/* ---------- Footer ---------- */
+footer {
+  border-top: 1px solid var(--divider);
+  background: linear-gradient(to bottom, var(--panel-grad-2) 0%, var(--surface-sunken) 100%);
+  box-shadow: inset 0 1px 0 var(--panel-highlight);
+  color: var(--text-muted);
+}
+
+/* ---------- Tables (billing history) ---------- */
+table {
+  border-collapse: collapse;
+  background: var(--input-bg);
+}
+thead {
+  background: linear-gradient(to bottom, var(--panel-grad-1) 0%, var(--panel-grad-2) 100%);
+  border-bottom: 1px solid var(--divider);
+  box-shadow: inset 0 1px 0 var(--panel-highlight);
+}
+thead th {
+  font-weight: bold;
+  color: var(--heading);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+tbody tr:nth-child(even) {
+  background: var(--surface-sunken);
+}
+tbody tr:hover {
+  background: rgba(74, 144, 217, 0.08);
+}
+td, th {
+  color: var(--text-main);
+}
+
+/* ---------- Theme toggle button ---------- */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid var(--input-border);
+  background: linear-gradient(to bottom, #ffffff 0%, #e2ecf6 50%, #cdd9e6 100%);
+  color: var(--text-main);
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s, filter 0.15s;
+}
+.theme-toggle:hover { transform: translateY(-1px); filter: brightness(1.04); }
+.theme-toggle:active { transform: translateY(0); filter: brightness(0.96); }
+
+[data-theme="dark"] .theme-toggle {
+  background: linear-gradient(to bottom, #3a4553 0%, #232b36 50%, #151b23 100%);
+  border-color: #455260;
+  color: #ffd166;
+  box-shadow: inset 0 1px 0 #5b6a7a, 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------- Badges ---------- */
+.badge {
+  display: inline-block;
+  padding: 1px 7px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 3px;
+  border: 1px solid;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* ---------- The classic "NEW!" sticker ---------- */
+.new-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  font-size: 9px;
+  font-weight: bold;
+  color: #6b3b00;
+  background: linear-gradient(to bottom, var(--badge-new-1), var(--badge-new-2));
+  border: 1px solid #b5791b;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- Math background softening ---------- */
+svg[aria-hidden="true"] {
+  opacity: 0.15;
+  transition: opacity 0.3s;
+}
+[data-theme="dark"] svg[aria-hidden="true"] {
+  opacity: 0.4;
+}
+
+/* ---------- Kill leftover backdrop-blur effects ---------- */
+.backdrop-blur,
+.backdrop-blur-sm,
+.backdrop-blur-md,
+.backdrop-blur-lg,
+.backdrop-blur-xl {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ---------- Smooth theme transition ---------- */
+.glass, .btn, .btn-primary, input, nav.glass, footer, table, thead {
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* ==========================================================
+   DARK MODE OVERRIDES — primary CTA buttons
+   Affects: Browse Products, + Add, Place Order, Sign In, etc.
+   Deep navy gradient so buttons sit inside the dark theme,
+   not on top of it.
+   ========================================================== */
+[data-theme="dark"] .btn-primary {
+  background: linear-gradient(
+    to bottom,
+    #2a5580 0%,
+    #1c3d5c 49%,
+    #0f2535 51%,
+    #173250 100%
+  );
+  border-color: #0a1a28;
+  color: #e2e8f0;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.7);
+  box-shadow:
+    inset 0 1px 0 rgba(108, 180, 255, 0.30),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.50),
+    0 1px 3px rgba(0, 0, 0, 0.60);
+}
+
+/* Softer sheen at half-height — the signature gloss, dimmed for dark */
+[data-theme="dark"] .btn-primary::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(108, 180, 255, 0.18),
+    rgba(108, 180, 255, 0)
+  );
+}
+
+[data-theme="dark"] .btn-primary:hover {
+  background: linear-gradient(
+    to bottom,
+    #356899 0%,
+    #234e75 49%,
+    #143350 51%,
+    #1f4265 100%
+  );
+  filter: none;
+  box-shadow:
+    inset 0 1px 0 rgba(108, 180, 255, 0.40),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.50),
+    0 1px 4px rgba(0, 0, 0, 0.70);
+}
+
+[data-theme="dark"] .btn-primary:active {
+  background: linear-gradient(to bottom, #0a1a28 0%, #143050 100%);
+  filter: none;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .btn-primary:disabled {
+  filter: none;
+  opacity: 0.5;
+}
+
+/* ============================================================
+   FORCE THEME ON COMPONENTS STILL USING LEGACY TAILWIND CLASSES
+   Tailwind bakes bg-dino-bg / bg-dino-panel at build time, so
+   they don't respond to [data-theme]. These overrides force
+   those surfaces to read from CSS variables instead.
+   ============================================================ */
+
+/* --- Input fields (Login, Register, Cart, Balance) --- */
+input,
+select,
+textarea,
+input[class*="bg-dino-bg"],
+textarea[class*="bg-dino-bg"] {
+  background: var(--input-bg) !important;
+  color: var(--text-main) !important;
+  border-color: var(--input-border) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.75;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--link) !important;
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.08),
+    0 0 0 3px rgba(74, 144, 217, 0.22) !important;
+}
+
+/* --- Quantity − / + buttons in the cart --- */
+button[aria-label*="Decrease"],
+button[aria-label*="Increase"],
+button[aria-label*="quantity"] {
+  background: linear-gradient(to bottom, #ffffff 0%, #eef4fa 50%, #dde8f3 100%) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--text-main) !important;
+  box-shadow: inset 0 1px 0 #ffffff, 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+}
+
+button[aria-label*="Decrease"]:hover,
+button[aria-label*="Increase"]:hover,
+button[aria-label*="quantity"]:hover {
+  background: linear-gradient(to bottom, #ffffff 0%, #dbe7f3 50%, #c8d6e5 100%) !important;
+}
+
+[data-theme="dark"] button[aria-label*="Decrease"],
+[data-theme="dark"] button[aria-label*="Increase"],
+[data-theme="dark"] button[aria-label*="quantity"] {
+  background: linear-gradient(to bottom, #3a4553 0%, #2c3540 50%, #232b36 100%) !important;
+  border-color: #455260 !important;
+  color: var(--text-main) !important;
+  box-shadow: inset 0 1px 0 #5b6a7a, 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] button[aria-label*="Decrease"]:hover,
+[data-theme="dark"] button[aria-label*="Increase"]:hover,
+[data-theme="dark"] button[aria-label*="quantity"]:hover {
+  background: linear-gradient(to bottom, #455260 0%, #38424f 50%, #2a333d 100%) !important;
+}
+
+/* --- Product category filter pills --- */
+[role="tablist"] button[role="tab"] {
+  background: linear-gradient(to bottom, #ffffff 0%, #eef4fa 50%, #dde8f3 100%) !important;
+  color: var(--text-muted) !important;
+  border: 1px solid var(--input-border) !important;
+  box-shadow: inset 0 1px 0 #ffffff, 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+}
+
+[role="tablist"] button[role="tab"]:hover {
+  background: linear-gradient(to bottom, #ffffff 0%, #dbe7f3 50%, #c8d6e5 100%) !important;
+  color: var(--text-main) !important;
+}
+
+[role="tablist"] button[role="tab"][aria-selected="true"] {
+  background: linear-gradient(
+    to bottom,
+    var(--btn-gloss-1) 0%,
+    var(--btn-gloss-2) 49%,
+    var(--btn-gloss-3) 51%,
+    var(--btn-gloss-4) 100%
+  ) !important;
+  color: var(--btn-text) !important;
+  border-color: var(--btn-border) !important;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+    0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="dark"] [role="tablist"] button[role="tab"] {
+  background: linear-gradient(to bottom, #3a4553 0%, #2c3540 50%, #232b36 100%) !important;
+  color: var(--text-muted) !important;
+  border-color: #455260 !important;
+}
+
+[data-theme="dark"] [role="tablist"] button[role="tab"]:hover {
+  background: linear-gradient(to bottom, #455260 0%, #38424f 50%, #2a333d 100%) !important;
+  color: var(--text-main) !important;
+}
+
+[data-theme="dark"] [role="tablist"] button[role="tab"][aria-selected="true"] {
+  background: linear-gradient(
+    to bottom,
+    #2a5580 0%,
+    #1c3d5c 49%,
+    #0f2535 51%,
+    #173250 100%
+  ) !important;
+  color: #e2e8f0 !important;
+  border-color: #0a1a28 !important;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.7);
+}
+
+/* --- Detected City box + any other bg-dino-bg wrappers --- */
+div[class*="bg-dino-bg"] {
+  background: var(--surface-sunken) !important;
+  border-color: var(--divider) !important;
 }
