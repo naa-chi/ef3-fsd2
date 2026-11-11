@@ -208,21 +208,7 @@ Run everything:
 🦖 **DinoBox © 2026** · A delivery simulation experiment · built with too much coffee and too many emojis.
 
 </div>
-```
 
----
-
-**Where to put it:** save as `README.md` at the repo root, i.e. `ef3-fsd2/README.md` (sibling of `Backend/` and `Frontend/`). GitHub will render it automatically on the repo landing page.
-
-Then commit:
-
-```bash
-git add README.md
-git commit -m "docs: add project README with setup, structure, and API reference"
-git push
-```
-
-And on the other PC:
 
 ```bash
 git pull
