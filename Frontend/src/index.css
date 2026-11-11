@@ -635,3 +635,12 @@ div[class*="bg-dino-bg"] {
   background: var(--surface-sunken) !important;
   border-color: var(--divider) !important;
 }
+
+body {
+  min-height: 100vh;
+}
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

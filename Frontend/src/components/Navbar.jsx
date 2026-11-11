@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useBalance } from '../context/BalanceContext';
+import { useI18n } from '../i18n/I18nContext';
+import { LanguageSelector } from './LanguageSelector';
 
 function SunIcon() {
   return (
@@ -26,6 +28,7 @@ export function Navbar() {
   const { user, logout } = useAuth();
   const { count } = useCart();
   const { balance } = useBalance();
+  const { t } = useI18n();
   const location = useLocation();
 
   const [theme, setTheme] = useState(() => {
@@ -47,14 +50,14 @@ export function Navbar() {
     new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(n);
 
   const links = [
-    { to: '/', label: 'Home' },
-    { to: '/products', label: 'Products' },
+    { to: '/', label: t('nav.home') },
+    { to: '/products', label: t('nav.products') },
     ...(user ? [
-      { to: '/cart', label: 'Cart' },
-      { to: '/orders', label: 'Orders' },
-      { to: '/account', label: 'Account' },
-      { to: '/balance', label: 'Balance' }
-    ] : [])
+      { to: '/cart', label: t('nav.cart'), showCartBadge: true },
+      { to: '/orders', label: t('nav.orders') },
+      { to: '/account', label: t('nav.account') },
+      { to: '/balance', label: t('nav.balance') },
+    ] : []),
   ];
 
   return (
@@ -86,7 +89,7 @@ export function Navbar() {
               }}
             >
               {link.label}
-              {link.label === 'Cart' && count > 0 && (
+              {link.showCartBadge && count > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -116,7 +119,7 @@ export function Navbar() {
             <>
               <div className="text-right hidden sm:block">
                 <p className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                  Balance
+                  {t('nav.balanceLabel')}
                 </p>
                 <p className="font-mono font-bold text-xs" style={{ color: 'var(--link)' }}>
                   {formatCLP(balance)}
@@ -124,7 +127,7 @@ export function Navbar() {
               </div>
               <div className="text-right hidden md:block">
                 <p className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                  Hi,
+                  {t('nav.hi')}
                 </p>
                 <p className="font-bold text-xs">{user.username}</p>
               </div>
@@ -133,16 +136,17 @@ export function Navbar() {
                 className="text-xs font-bold"
                 style={{ color: 'var(--text-muted)' }}
               >
-                Logout
+                {t('nav.logout')}
               </button>
             </>
           ) : (
             <Link to="/login" className="btn-primary !px-4 !py-1.5 text-xs">
-              Sign In
+              {t('nav.signIn')}
             </Link>
           )}
 
-          {/* THEME TOGGLE — bulletproof: inline styles + CSS class + visible label */}
+          <LanguageSelector />
+
           <button
             type="button"
             onClick={toggleTheme}

@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { useI18n } from '../i18n/I18nContext';
 
 export function Register() {
+  const { t } = useI18n();
   const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [error, setError] = useState('');
   const { register } = useAuth();
@@ -32,7 +34,7 @@ export function Register() {
         onSubmit={handleSubmit}
         className="glass rounded-3xl p-10 w-full max-w-md"
       >
-        <h1 className="font-display text-3xl font-bold gradient-text mb-2">Join DinoBox</h1>
+        <h1 className="font-display text-3xl font-bold gradient-text mb-2">{t('register.title')}</h1>
         <p className="text-dino-muted text-sm mb-8">Create your account in seconds</p>
 
         {error && (
@@ -56,7 +58,7 @@ export function Register() {
             />
           </div>
           <div>
-            <label htmlFor="email" className="block text-sm text-dino-muted mb-2">Email</label>
+            <label htmlFor="email" className="block text-sm text-dino-muted mb-2">{t('login.email')}</label>
             <input
               id="email"
               type="email"
@@ -69,7 +71,7 @@ export function Register() {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm text-dino-muted mb-2">Password</label>
+            <label htmlFor="password" className="block text-sm text-dino-muted mb-2">{t('login.password')}</label>
             <input
               id="password"
               type="password"
@@ -84,7 +86,7 @@ export function Register() {
         </div>
 
         <button type="submit" className="btn-primary w-full mt-8">
-          Create Account
+          {t('register.submit')}
         </button>
 
         <p className="text-center text-sm text-dino-muted mt-6">

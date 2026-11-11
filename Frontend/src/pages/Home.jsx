@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useI18n } from '../i18n/I18nContext';
 import { TrackingSearch } from '../components/TrackingSearch';
 
 export function Home() {
+  const { t } = useI18n();
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-20">
 
-      {/* ─── Hero ─────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -29,16 +31,14 @@ export function Home() {
         </h1>
 
         <p className="text-xl text-dino-muted max-w-2xl mx-auto mb-10">
-          A beautifully chaotic delivery simulation. Browse products, track packages
-          through unpredictable journeys, and experience the thrill of modern logistics.
+          {t('hero.subtitle')}
         </p>
 
         <div className="flex gap-4 justify-center flex-wrap">
           <Link to="/products" className="btn-primary">
-            Browse Products
+            {t('hero.browse')}
           </Link>
 
-          {/* Top Up Balance — inline-styled to survive theme toggling */}
           <Link
             to="/balance"
             style={{
@@ -60,24 +60,21 @@ export function Home() {
             onMouseOver={(e) => (e.currentTarget.style.filter = 'brightness(1.06)')}
             onMouseOut={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
           >
-            Top Up Balance
+            {t('hero.topUp')}
           </Link>
         </div>
       </motion.div>
 
-      {/* ─── Divider ──────────────────────────────────────── */}
       <div className="my-16 flex items-center gap-4">
         <div className="flex-1 h-px" style={{ background: 'var(--divider)' }} />
         <span className="text-xs uppercase tracking-widest font-bold" style={{ color: 'var(--text-muted)' }}>
-          Public Tracking
+          {t('hero.publicTracking')}
         </span>
         <div className="flex-1 h-px" style={{ background: 'var(--divider)' }} />
       </div>
 
-      {/* ─── Public Tracking Search ───────────────────────── */}
       <TrackingSearch />
 
-      {/* ─── Feature Cards ────────────────────────────────── */}
       <div className="grid md:grid-cols-3 gap-6 mt-20">
         {[
           { icon: '📦', title: 'Track Everything', desc: 'Real-time state machine simulation with unpredictable outcomes.' },

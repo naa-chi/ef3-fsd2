@@ -2,6 +2,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { OrderTracker } from '../components/OrderTracker';
 import { useAuth } from '../context/AuthContext';
+import { useI18n } from '../i18n/I18nContext';
 import api from '../services/api';
 
 export function Orders() {
@@ -13,9 +14,9 @@ export function Orders() {
   });
   const [showReceipts, setShowReceipts] = useState(false);
   const { user } = useAuth();
+  const { t } = useI18n();
   const receiptRef = useRef(null);
 
-  
   // Persist archived list
   useEffect(() => {
     localStorage.setItem('dinobox_archived_orders', JSON.stringify([...archivedIds]));
@@ -26,7 +27,8 @@ export function Orders() {
       if (!user) { setLoading(false); return; }
       try {
         const res = await api.get(`/orders/history/${user.username}`);
-        setOrders(res.data);
+        // Defensive: guarantee an array even if the backend returns null
+        setOrders(Array.isArray(res.data) ? res.data : []);
       } catch {
         setOrders([]);
       } finally {
@@ -72,7 +74,7 @@ export function Orders() {
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
         className="font-display text-4xl font-bold gradient-text mb-2"
       >
-        Your Deliveries
+        {t('orders.title')}
       </motion.h1>
       <p className="text-dino-muted mb-8">Track active packages — completed ones fly to your receipts.</p>
 
