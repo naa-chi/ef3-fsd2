@@ -8,14 +8,14 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter // shitass noargs and allargs was breaking thoroughly wtf man
+@Getter
 @Setter
 @Entity
 @Table(name = "ProductModel", schema = "DinoRawrsX3")
 public class ProductModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;   // ← was `Id` (capital I); renamed so Jackson serializes it as JSON key "id"
 
     @Column(unique = false, nullable = false)
     private String productName;

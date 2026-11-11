@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { useI18n } from '../i18n/I18nContext';
 
 export function Login() {
+  const { t } = useI18n();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -29,7 +31,7 @@ export function Login() {
         onSubmit={handleSubmit}
         className="glass rounded-3xl p-10 w-full max-w-md"
       >
-        <h1 className="font-display text-3xl font-bold gradient-text mb-2">Welcome back</h1>
+        <h1 className="font-display text-3xl font-bold gradient-text mb-2">{t('login.title')}</h1>
         <p className="text-dino-muted text-sm mb-8">Sign in to continue your journey</p>
 
         {error && (
@@ -45,7 +47,7 @@ export function Login() {
 
         <div className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm text-dino-muted mb-2">Email</label>
+            <label htmlFor="email" className="block text-sm text-dino-muted mb-2">{t('login.email')}</label>
             <input
               id="email"
               type="email"
@@ -58,7 +60,7 @@ export function Login() {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm text-dino-muted mb-2">Password</label>
+            <label htmlFor="password" className="block text-sm text-dino-muted mb-2">{t('login.password')}</label>
             <input
               id="password"
               type="password"
@@ -73,7 +75,7 @@ export function Login() {
         </div>
 
         <button type="submit" className="btn-primary w-full mt-8">
-          Sign In
+          {t('login.submit')}
         </button>
 
         <p className="text-center text-sm text-dino-muted mt-6">

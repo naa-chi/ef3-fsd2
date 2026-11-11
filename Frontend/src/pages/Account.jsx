@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useBalance } from '../context/BalanceContext';
 import { useLocation } from '../hooks/useLocation';
+import { useI18n } from '../i18n/I18nContext';
 import api from '../services/api';
 
 export function Account() {
   const { user } = useAuth();
   const { balance } = useBalance();
   const geo = useLocation();
+  const { t } = useI18n();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,7 +21,8 @@ export function Account() {
   useEffect(() => {
     if (!user) { setLoading(false); return; }
     api.get(`/orders/history/${user.username}`)
-      .then(r => setOrders(r.data))
+      // Defensive: guarantee an array even if the backend returns null
+      .then(r => setOrders(Array.isArray(r.data) ? r.data : []))
       .catch(() => setOrders([]))
       .finally(() => setLoading(false));
   }, [user]);
@@ -46,7 +49,7 @@ export function Account() {
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
         className="font-display text-4xl font-bold gradient-text mb-2"
       >
-        My Account
+        {t('account.title')}
       </motion.h1>
       <p className="text-dino-muted mb-10">Profile, location, and billing history.</p>
 

@@ -2,12 +2,17 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import App from '../App';
 
-// Mock geolocation
 beforeAll(() => {
   Object.defineProperty(global.navigator, 'geolocation', {
     value: { getCurrentPosition: vi.fn() },
     writable: true
   });
+  // Force English for i18n tests
+  Object.defineProperty(global.navigator, 'language', {
+    value: 'en-US',
+    configurable: true
+  });
+  localStorage.clear();
 });
 
 describe('App', () => {

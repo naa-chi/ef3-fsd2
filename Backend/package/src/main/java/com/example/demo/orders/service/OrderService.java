@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,10 +33,11 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderModel> getUserHistory(String username) {
-        return repo.findByUsernameOrderByPurchaseDateDesc(username);
+        // Defensive: JPA usually returns [], but guarantee it to avoid NPEs on new users
+        List<OrderModel> history = repo.findByUsernameOrderByPurchaseDateDesc(username);
+        return history != null ? history : new ArrayList<>();
     }
 
-    // THIS IS CALLED BY THE FRONTEND TIMER EVERY TICK
     public OrderModel updateState(Long id, CurrentState newState) {
         OrderModel order = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
