@@ -8,7 +8,9 @@ import api, { packagesApi } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../components/Toast';
 
+import { Ltr } from '../components/Ltr';
 export function Cart() {
+  const { t } = useLanguage();
   const { items, updateQty, removeItem, clearCart, total } = useCart();
   const { balance, deduct } = useBalance();
   const { user } = useAuth();
@@ -154,7 +156,7 @@ export function Cart() {
           <div className="border-t border-dino-accent/10 pt-4 mb-4">
             <div className="flex justify-between text-sm mb-2">
               <span className="text-dino-muted">Subtotal</span>
-              <span className="font-mono">{formatCLP(total)}</span>
+              <span className="font-mono"><Ltr>{formatCLP(total)}</Ltr></span>
             </div>
             <div className="flex justify-between text-sm mb-2">
               <span className="text-dino-muted">Delivery</span>
@@ -162,12 +164,12 @@ export function Cart() {
             </div>
             <div className="flex justify-between font-bold text-lg pt-2 border-t border-dino-accent/10">
               <span>Total</span>
-              <span className="gradient-text">{formatCLP(total)}</span>
+              <span className="gradient-text"><Ltr>{formatCLP(total)}</Ltr></span>
             </div>
           </div>
 
           <div className="text-xs text-dino-muted mb-4">
-            Your balance: <span className="font-mono text-dino-mint">{formatCLP(balance)}</span>
+            Your balance: <span className="font-mono text-dino-mint"><Ltr>{formatCLP(balance)}</Ltr></span>
           </div>
 
           <button onClick={handleCheckout} disabled={checkingOut} className="btn-primary w-full">

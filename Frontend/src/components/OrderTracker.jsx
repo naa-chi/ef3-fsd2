@@ -4,6 +4,7 @@ import { useBalance } from '../context/BalanceContext';
 import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 
+import { Ltr } from './Ltr';
 const STATE_CONFIG = {
   PENDING:          { label: 'Pending',          color: '#f59e0b', icon: '⏳' },
   EN_ROUTE:         { label: 'En Route',         color: '#60a5fa', icon: '🚚' },
@@ -13,6 +14,7 @@ const STATE_CONFIG = {
 };
 
 export function OrderTracker({ order, onComplete }) {
+  const { t } = useLanguage();
   const simulationId = order.id;
   const trackingCode = order.orderId;
   const { state, nextChangeIn } = usePackageSimulation(simulationId, trackingCode, order.currentState);
@@ -82,7 +84,7 @@ export function OrderTracker({ order, onComplete }) {
         </div>
         <div className="text-right">
           <p className="text-xs text-dino-muted">Total</p>
-          <p className="font-bold gradient-text">{formatCLP(totalPaid)}</p>
+          <p className="font-bold gradient-text"><Ltr>{formatCLP(totalPaid)}</Ltr></p>
         </div>
       </div>
 
@@ -141,7 +143,7 @@ export function OrderTracker({ order, onComplete }) {
                 {orderDetails.items.map((item, idx) => (
                   <div key={idx} className="flex justify-between text-sm bg-dino-bg/50 p-2 rounded-lg">
                     <span className="text-dino-text">{item.qty}x {item.name}</span>
-                    <span className="font-mono text-dino-muted">{formatCLP(item.price * item.qty)}</span>
+                    <span className="font-mono text-dino-muted"><Ltr>{formatCLP(item.price * item.qty)}</Ltr></span>
                   </div>
                 ))}
               </motion.div>

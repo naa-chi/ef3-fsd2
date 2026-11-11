@@ -6,7 +6,9 @@ import { useBalance } from '../context/BalanceContext';
 import { useLocation } from '../hooks/useLocation';
 import api from '../services/api';
 
+import { Ltr } from '../components/Ltr';
 export function Account() {
+  const { t } = useLanguage();
   const { user } = useAuth();
   const { balance } = useBalance();
   const geo = useLocation();
@@ -77,7 +79,7 @@ export function Account() {
           className="glass rounded-2xl p-6"
         >
           <p className="text-xs text-dino-muted uppercase tracking-wider mb-2">Balance</p>
-          <p className="font-display font-bold text-xl gradient-text">{formatCLP(balance)}</p>
+          <p className="font-display font-bold text-xl gradient-text"><Ltr>{formatCLP(balance)}</Ltr></p>
           <Link to="/balance" className="text-xs text-dino-glow hover:underline">Top up →</Link>
         </motion.div>
       </div>
@@ -86,11 +88,11 @@ export function Account() {
       <div className="grid grid-cols-2 gap-4 mb-10">
         <div className="glass rounded-2xl p-5">
           <p className="text-xs text-dino-muted mb-1">Total Spent</p>
-          <p className="font-mono font-bold text-2xl text-dino-text">{formatCLP(totalSpent)}</p>
+          <p className="font-mono font-bold text-2xl text-dino-text"><Ltr>{formatCLP(totalSpent)}</Ltr></p>
         </div>
         <div className="glass rounded-2xl p-5">
           <p className="text-xs text-dino-muted mb-1">Total Refunded</p>
-          <p className="font-mono font-bold text-2xl text-dino-mint">{formatCLP(totalRefunded)}</p>
+          <p className="font-mono font-bold text-2xl text-dino-mint"><Ltr>{formatCLP(totalRefunded)}</Ltr></p>
         </div>
       </div>
 
@@ -135,7 +137,7 @@ export function Account() {
                       <td className="px-6 py-3 font-mono text-xs text-dino-muted">{o.purchaseDate}</td>
                       <td className="px-6 py-3 font-mono text-xs">{o.packageOrderId}</td>
                       <td className="px-6 py-3 text-xs">{o.currentState?.replace(/_/g, ' ')}</td>
-                      <td className="px-6 py-3 text-right font-mono">{formatCLP(o.totalAmount)}</td>
+                      <td className="px-6 py-3 text-right font-mono"><Ltr>{formatCLP(o.totalAmount)}</Ltr></td>
                       <td className="px-6 py-3 text-right">
                         <span className={`text-xs px-2 py-1 rounded-full ${
                           o.status === 'REFUNDED'
