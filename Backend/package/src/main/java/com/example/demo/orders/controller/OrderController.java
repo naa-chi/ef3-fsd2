@@ -35,6 +35,7 @@ public class OrderController {
         }
     }
 
+    @Operation(summary = "Get order history for a specific user")
     @GetMapping("/history/{username}")
     public ResponseEntity<List<OrderModel>> getHistory(@PathVariable String username) {
         return ResponseEntity.ok(service.getUserHistory(username));
