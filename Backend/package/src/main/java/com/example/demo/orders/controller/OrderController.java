@@ -1,0 +1,71 @@
+package com.example.demo.orders.controller;
+
+import com.example.demo.orders.model.OrderModel;
+import com.example.demo.orders.service.OrderService;
+import com.example.demo.packages.model.CurrentState;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/v1/orders")
+@RequiredArgsConstructor
+public class OrderController {
+    private final OrderService service;
+
+    @Operation(summary = "Does the thing and creates a new order", description = "Creates a new order idk man its self explanatory")
+    @PostMapping
+    public ResponseEntity<?> createOrder(@RequestBody OrderModel orderRequest) {
+        try {
+            // Basic validation to prevent DB 500 errors
+            if (orderRequest.getUsername() == null || orderRequest.getPackageOrderId() == null || orderRequest.getTotalAmount() == null) {
+                return ResponseEntity.badRequest().body("Missing required fields (username, packageOrderId, or totalAmount)");
+            }
+
+            OrderModel created = service.createOrder(
+                orderRequest.getUsername(),
+                orderRequest.getPackageOrderId(),
+                orderRequest.getTotalAmount()
+            );
+            return ResponseEntity.ok(created);
+        } catch (Exception e) {
+            e.printStackTrace(); // Prints the error to your backend console
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Gets the order history for a user", description = "Returns a list of orders for the specified username")
+    @GetMapping("/history/{username}")
+    public ResponseEntity<List<OrderModel>> getHistory(@PathVariable String username) {
+        return ResponseEntity.ok(service.getUserHistory(username));
+    }
+
+    @Operation(summary = "Updates the state of an order", description = "Updates the state of an order based on the provided ID and state")
+    // FRONTEND TIMER CALLS THIS TO UPDATE STATE
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateState(@PathVariable Long id, @RequestBody Map<String, String> payload) {
+        try {
+            String stateStr = payload.get("currentState");
+            if (stateStr == null) {
+                return ResponseEntity.badRequest().body("currentState cannot be null");
+            }
+            CurrentState newState = CurrentState.valueOf(stateStr);
+            return ResponseEntity.ok(service.updateState(id, newState));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Processes a refund for an order", description = "Processes a refund for the specified order ID")
+    @PutMapping("/{id}/refund")
+    public ResponseEntity<?> processRefund(@PathVariable Long id) {
+        try {
+            OrderModel refunded = service.processRefund(id);
+            return ResponseEntity.ok(refunded);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+}
