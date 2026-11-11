@@ -15,6 +15,7 @@ import java.util.Map;
 public class OrderController {
     private final OrderService service;
 
+    @Operation(summary = "Creates a new order", description = "Creates a new order with the provided username, packageOrderId, and totalAmount. Returns the created order.")
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody OrderModel orderRequest) {
         try {
@@ -35,12 +36,13 @@ public class OrderController {
         }
     }
 
-    @Operation(summary = "Get order history for a specific user")
+    @Operation(summary = "Get order history for a specific user", description = "self explanatory")
     @GetMapping("/history/{username}")
     public ResponseEntity<List<OrderModel>> getHistory(@PathVariable String username) {
         return ResponseEntity.ok(service.getUserHistory(username));
     }
 
+    @Operation(summary = "Get order by ID", description = "self explanatory")
     // FRONTEND TIMER CALLS THIS TO UPDATE STATE
     @PutMapping("/{id}")
     public ResponseEntity<?> updateState(@PathVariable Long id, @RequestBody Map<String, String> payload) {
@@ -56,6 +58,7 @@ public class OrderController {
         }
     }
 
+    @Operation(summary = "Process a refund for an order", description = "Processes a refund for the order with the given ID. Returns the refunded order or an error message if the refund cannot be processed.")
     @PutMapping("/{id}/refund")
     public ResponseEntity<?> processRefund(@PathVariable Long id) {
         try {
